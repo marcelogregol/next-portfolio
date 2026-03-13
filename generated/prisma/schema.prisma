@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model about {
+  id             Int              @id @default(autoincrement())
+  title          String
+  text           String           @db.LongText
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime
+  abouthighlight abouthighlight[]
+}
+
+model abouthighlight {
+  id      Int    @id @default(autoincrement())
+  aboutId Int
+  title   String
+  about   about  @relation(fields: [aboutId], references: [id], map: "AboutHighlight_aboutId_fkey")
+
+  @@index([aboutId], map: "AboutHighlight_aboutId_fkey")
+}
+
+model hero {
+  id        Int      @id @default(autoincrement())
+  greeting  String
+  title     String
+  subtitle  String   @db.LongText
+  cta1Text  String
+  cta1Href  String
+  cta2Text  String
+  cta2Href  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model skill {
+  id           Int      @id @default(autoincrement())
+  name         String
+  description  String   @db.LongText
+  category     String
+  level        String?
+  iconKey      String?
+  enabled      Boolean  @default(true)
+  displayOrder Int      @default(1)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model project {
+  id           Int      @id @default(autoincrement())
+  title        String
+  shortDesc    String
+  longDesc     String   @db.LongText
+  tagsJson     String?  @db.LongText
+  imageUrl     String?
+  demoUrl      String?
+  codeUrl      String?
+  featured     Boolean  @default(false)
+  enabled      Boolean  @default(true)
+  displayOrder Int      @default(1)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model contact {
+  id            Int      @id @default(autoincrement())
+  email         String
+  whatsapp      String
+  linkedin      String
+  github        String
+  ctaTitle      String
+  ctaSubtitle   String   @db.LongText
+  ctaButtonText String
+  ctaButtonHref String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
