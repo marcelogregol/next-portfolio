@@ -6,6 +6,8 @@ import Projects from "../components/layout/Projects";
 import Footer from "../components/layout/Footer";
 import CTA from "../components/layout/CTA";
 
+export const dynamic = "force-dynamic";
+
 export default function Page() {
   return (
     <main id="top" className="min-h-screen">
