@@ -71,6 +71,9 @@ export function AdminShell({ children }: { children: ReactNode }) {
     }
 
     async function publish() {
+        if (!content) {
+            return;
+        }
 
         try {
             setSaving(true);
