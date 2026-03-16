@@ -12,18 +12,6 @@ export type ContactContent = {
     ctaButtonHref: string;
 };
 
-type ContactRow = {
-    id: number;
-    email: string;
-    whatsapp: string;
-    linkedin: string;
-    github: string;
-    ctaTitle: string;
-    ctaSubtitle: string;
-    ctaButtonText: string;
-    ctaButtonHref: string;
-};
-
 export const defaultContact: ContactContent = {
     id: null,
     email: "marcelo.dev@email.com",
@@ -37,75 +25,58 @@ export const defaultContact: ContactContent = {
 };
 
 export async function ensureContactTable() {
-    await prisma.$executeRawUnsafe(`
-        CREATE TABLE IF NOT EXISTS contact (
-            id INTEGER NOT NULL AUTO_INCREMENT,
-            email VARCHAR(191) NOT NULL,
-            whatsapp VARCHAR(191) NOT NULL,
-            linkedin VARCHAR(191) NOT NULL,
-            github VARCHAR(191) NOT NULL,
-            ctaTitle VARCHAR(191) NOT NULL,
-            ctaSubtitle LONGTEXT NOT NULL,
-            ctaButtonText VARCHAR(191) NOT NULL,
-            ctaButtonHref VARCHAR(191) NOT NULL,
-            createdAt DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-            updatedAt DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
-            PRIMARY KEY (id)
-        ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-    `);
+    return;
 }
 
 export async function getContactContent() {
-    await ensureContactTable();
+    try {
+        await ensureContactTable();
 
-    const rows = await prisma.$queryRaw<ContactRow[]>`
-        SELECT id, email, whatsapp, linkedin, github, ctaTitle, ctaSubtitle, ctaButtonText, ctaButtonHref
-        FROM contact
-        ORDER BY id ASC
-        LIMIT 1
-    `;
+        const row = await prisma.contact.findFirst({
+            orderBy: { id: "asc" },
+        });
 
-    return rows[0] ?? defaultContact;
+        return row ?? defaultContact;
+    } catch (error) {
+        console.error("Failed to load contact content. Using defaults.", error);
+        return defaultContact;
+    }
 }
 
 export async function saveContact(input: ContactContent) {
     await ensureContactTable();
 
-    const existing = await prisma.$queryRaw<ContactRow[]>`
-        SELECT id, email, whatsapp, linkedin, github, ctaTitle, ctaSubtitle, ctaButtonText, ctaButtonHref
-        FROM contact
-        ORDER BY id ASC
-        LIMIT 1
-    `;
+    const existing = await prisma.contact.findFirst({
+        orderBy: { id: "asc" },
+    });
 
-    if (existing.length === 0) {
-        await prisma.$executeRaw`
-            INSERT INTO contact (email, whatsapp, linkedin, github, ctaTitle, ctaSubtitle, ctaButtonText, ctaButtonHref)
-            VALUES (
-                ${input.email ?? ""},
-                ${input.whatsapp ?? ""},
-                ${input.linkedin ?? ""},
-                ${input.github ?? ""},
-                ${input.ctaTitle ?? ""},
-                ${input.ctaSubtitle ?? ""},
-                ${input.ctaButtonText ?? ""},
-                ${input.ctaButtonHref ?? ""}
-            )
-        `;
+    if (!existing) {
+        await prisma.contact.create({
+            data: {
+                email: input.email ?? "",
+                whatsapp: input.whatsapp ?? "",
+                linkedin: input.linkedin ?? "",
+                github: input.github ?? "",
+                ctaTitle: input.ctaTitle ?? "",
+                ctaSubtitle: input.ctaSubtitle ?? "",
+                ctaButtonText: input.ctaButtonText ?? "",
+                ctaButtonHref: input.ctaButtonHref ?? "",
+            },
+        });
     } else {
-        await prisma.$executeRaw`
-            UPDATE contact
-            SET
-                email = ${input.email ?? ""},
-                whatsapp = ${input.whatsapp ?? ""},
-                linkedin = ${input.linkedin ?? ""},
-                github = ${input.github ?? ""},
-                ctaTitle = ${input.ctaTitle ?? ""},
-                ctaSubtitle = ${input.ctaSubtitle ?? ""},
-                ctaButtonText = ${input.ctaButtonText ?? ""},
-                ctaButtonHref = ${input.ctaButtonHref ?? ""}
-            WHERE id = ${existing[0].id}
-        `;
+        await prisma.contact.update({
+            where: { id: existing.id },
+            data: {
+                email: input.email ?? "",
+                whatsapp: input.whatsapp ?? "",
+                linkedin: input.linkedin ?? "",
+                github: input.github ?? "",
+                ctaTitle: input.ctaTitle ?? "",
+                ctaSubtitle: input.ctaSubtitle ?? "",
+                ctaButtonText: input.ctaButtonText ?? "",
+                ctaButtonHref: input.ctaButtonHref ?? "",
+            },
+        });
     }
 
     return getContactContent();

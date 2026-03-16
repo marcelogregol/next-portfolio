@@ -167,74 +167,63 @@ async function replaceSkillsInDb(input: SkillContent[]) {
     const normalized = dedupeSkills(input);
 
     await prisma.$transaction(async (tx) => {
-        await tx.$executeRawUnsafe(`DELETE FROM skill`);
+        await tx.skill.deleteMany();
 
         for (const [index, skill] of normalized.entries()) {
-            await tx.$executeRaw`
-                INSERT INTO skill (name, description, category, level, iconKey, enabled, displayOrder)
-                VALUES (
-                    ${skill.name},
-                    ${skill.description},
-                    ${skill.category},
-                    ${skill.level || null},
-                    ${skill.iconKey},
-                    ${skill.enabled},
-                    ${skill.order || index + 1}
-                )
-            `;
+            await tx.skill.create({
+                data: {
+                    name: skill.name,
+                    description: skill.description,
+                    category: skill.category,
+                    level: skill.level || null,
+                    iconKey: skill.iconKey,
+                    enabled: skill.enabled,
+                    displayOrder: skill.order || index + 1,
+                },
+            });
         }
     });
 }
 
 export async function ensureSkillsTable() {
-    await prisma.$executeRawUnsafe(`
-        CREATE TABLE IF NOT EXISTS skill (
-            id INTEGER NOT NULL AUTO_INCREMENT,
-            name VARCHAR(191) NOT NULL,
-            description LONGTEXT NOT NULL,
-            category VARCHAR(191) NOT NULL,
-            level VARCHAR(191) NULL,
-            iconKey VARCHAR(191) NULL,
-            enabled BOOLEAN NOT NULL DEFAULT true,
-            displayOrder INTEGER NOT NULL DEFAULT 1,
-            createdAt DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-            updatedAt DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
-            PRIMARY KEY (id)
-        ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-    `);
-
-    await prisma.$executeRawUnsafe(`
-        ALTER TABLE skill
-        ADD COLUMN IF NOT EXISTS iconKey VARCHAR(191) NULL AFTER level;
-    `);
+    return;
 }
 
 async function readSkillsFromDb() {
     await ensureSkillsTable();
 
-    const rows = await prisma.$queryRaw<SkillRow[]>`
-        SELECT id, name, description, category, level, iconKey, enabled, displayOrder
-        FROM skill
-        ORDER BY displayOrder ASC, id ASC
-    `;
+    const rows = await prisma.skill.findMany({
+        orderBy: [{ displayOrder: "asc" }, { id: "asc" }],
+    });
 
     return rows.map(mapSkill);
 }
 
 export async function getSkillsContent(options?: { includeFallback?: boolean }) {
     const includeFallback = options?.includeFallback ?? true;
-    const skills = await readSkillsFromDb();
-    const dedupedSkills = dedupeSkills(skills);
 
-    if (skills.length !== dedupedSkills.length) {
-        await replaceSkillsInDb(dedupedSkills);
+    try {
+        const skills = await readSkillsFromDb();
+        const dedupedSkills = dedupeSkills(skills);
+
+        if (skills.length !== dedupedSkills.length) {
+            await replaceSkillsInDb(dedupedSkills);
+        }
+
+        if (dedupedSkills.length === 0 && includeFallback) {
+            return defaultSkills;
+        }
+
+        return dedupedSkills;
+    } catch (error) {
+        console.error("Failed to load skills content. Using defaults.", error);
+
+        if (includeFallback) {
+            return defaultSkills;
+        }
+
+        return [];
     }
-
-    if (dedupedSkills.length === 0 && includeFallback) {
-        return defaultSkills;
-    }
-
-    return dedupedSkills;
 }
 
 export async function getEnabledSkills() {

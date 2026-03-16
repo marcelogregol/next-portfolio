@@ -98,47 +98,26 @@ function mapProject(row: ProjectRow): ProjectContent {
 }
 
 export async function ensureProjectsTable() {
-    await prisma.$executeRawUnsafe(`
-        CREATE TABLE IF NOT EXISTS project (
-            id INTEGER NOT NULL AUTO_INCREMENT,
-            title VARCHAR(191) NOT NULL,
-            shortDesc VARCHAR(191) NOT NULL,
-            longDesc LONGTEXT NOT NULL,
-            tagsJson LONGTEXT NULL,
-            imageUrl VARCHAR(191) NULL,
-            demoUrl VARCHAR(191) NULL,
-            codeUrl VARCHAR(191) NULL,
-            featured BOOLEAN NOT NULL DEFAULT false,
-            enabled BOOLEAN NOT NULL DEFAULT true,
-            displayOrder INTEGER NOT NULL DEFAULT 1,
-            createdAt DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-            updatedAt DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
-            PRIMARY KEY (id)
-        ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-    `);
-
-    await prisma.$executeRawUnsafe(`
-        ALTER TABLE project ADD COLUMN IF NOT EXISTS tagsJson LONGTEXT NULL AFTER longDesc;
-    `);
-    await prisma.$executeRawUnsafe(`
-        ALTER TABLE project ADD COLUMN IF NOT EXISTS imageUrl VARCHAR(191) NULL AFTER tagsJson;
-    `);
+    return;
 }
 
 export async function getProjectsContent() {
-    await ensureProjectsTable();
+    try {
+        await ensureProjectsTable();
 
-    const rows = await prisma.$queryRaw<ProjectRow[]>`
-        SELECT id, title, shortDesc, longDesc, tagsJson, imageUrl, demoUrl, codeUrl, featured, enabled, displayOrder
-        FROM project
-        ORDER BY displayOrder ASC, id ASC
-    `;
+        const rows = await prisma.project.findMany({
+            orderBy: [{ displayOrder: "asc" }, { id: "asc" }],
+        });
 
-    if (rows.length === 0) {
+        if (rows.length === 0) {
+            return defaultProjects;
+        }
+
+        return rows.map(mapProject);
+    } catch (error) {
+        console.error("Failed to load projects content. Using defaults.", error);
         return defaultProjects;
     }
-
-    return rows.map(mapProject);
 }
 
 export async function getEnabledProjects() {
@@ -149,24 +128,23 @@ export async function getEnabledProjects() {
 export async function saveProjects(input: ProjectContent[]) {
     await ensureProjectsTable();
 
-    await prisma.$executeRawUnsafe(`DELETE FROM project`);
+    await prisma.project.deleteMany();
 
     for (const [index, project] of input.entries()) {
-        await prisma.$executeRaw`
-            INSERT INTO project (title, shortDesc, longDesc, tagsJson, imageUrl, demoUrl, codeUrl, featured, enabled, displayOrder)
-            VALUES (
-                ${project.title ?? ""},
-                ${project.shortDesc ?? ""},
-                ${project.longDesc ?? ""},
-                ${JSON.stringify(project.tags ?? [])},
-                ${project.imageUrl || "/images/demo.jpg"},
-                ${project.demoUrl || null},
-                ${project.codeUrl || null},
-                ${project.featured},
-                ${project.enabled},
-                ${project.order || index + 1}
-            )
-        `;
+        await prisma.project.create({
+            data: {
+                title: project.title ?? "",
+                shortDesc: project.shortDesc ?? "",
+                longDesc: project.longDesc ?? "",
+                tagsJson: JSON.stringify(project.tags ?? []),
+                imageUrl: project.imageUrl || "/images/demo.jpg",
+                demoUrl: project.demoUrl || null,
+                codeUrl: project.codeUrl || null,
+                featured: project.featured,
+                enabled: project.enabled,
+                displayOrder: project.order || index + 1,
+            },
+        });
     }
 
     return getProjectsContent();

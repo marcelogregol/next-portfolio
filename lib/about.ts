@@ -23,27 +23,32 @@ export const defaultAbout: AboutContent = {
 };
 
 export async function getAbout() {
-    const about = await prisma.about.findFirst({
-        include: {
-            abouthighlight: {
-                orderBy: { id: "asc" },
+    try {
+        const about = await prisma.about.findFirst({
+            include: {
+                abouthighlight: {
+                    orderBy: { id: "asc" },
+                },
             },
-        },
-    });
+        });
 
-    if (!about) {
+        if (!about) {
+            return defaultAbout;
+        }
+
+        return {
+            id: about.id,
+            title: about.title,
+            text: about.text,
+            highlights: about.abouthighlight.map((item) => ({
+                id: item.id,
+                title: item.title,
+            })),
+        };
+    } catch (error) {
+        console.error("Failed to load about content. Using defaults.", error);
         return defaultAbout;
     }
-
-    return {
-        id: about.id,
-        title: about.title,
-        text: about.text,
-        highlights: about.abouthighlight.map((item) => ({
-            id: item.id,
-            title: item.title,
-        })),
-    };
 }
 
 export async function saveAbout(input: { title: string; text: string; highlights: string[] }) {
