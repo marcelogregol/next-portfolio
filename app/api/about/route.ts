@@ -41,6 +41,7 @@ export async function PUT(req: NextRequest) {
                 data: {
                     title: body.title ?? "",
                     text: body.text ?? "",
+                    updatedAt: new Date(),
                 },
             });
         } else {
@@ -49,6 +50,7 @@ export async function PUT(req: NextRequest) {
                 data: {
                     title: body.title ?? "",
                     text: body.text ?? "",
+                    updatedAt: new Date(),
                 },
             });
         }

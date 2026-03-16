@@ -33,8 +33,36 @@ function normalizeOrders(skills: SkillForm[]) {
 
 export default function SkillsPage() {
     const { content, patch, notify } = useContent();
-    const skills = useMemo(
-        () => [...content.skills].sort((a, b) => a.order - b.order),
+
+    const skills = useMemo<SkillForm[]>(
+        () =>
+            [...content.skills]
+                .map((skill, index) => ({
+                    id: typeof skill?.id === "number" ? skill.id : undefined,
+                    name: skill?.name ?? "",
+                    description: skill?.description ?? "",
+                    category:
+                        skill?.category === "Front-end" ||
+                            skill?.category === "Back-end" ||
+                            skill?.category === "Database" ||
+                            skill?.category === "Outros"
+                            ? skill.category
+                            : "Outros",
+                    level:
+                        skill?.level === "Iniciante" ||
+                            skill?.level === "Intermediario" ||
+                            skill?.level === "Avancado" ||
+                            skill?.level === ""
+                            ? skill.level
+                            : "",
+                    iconKey:
+                        typeof skill?.iconKey === "string"
+                            ? (skill.iconKey as SkillIconKey)
+                            : "gear",
+                    enabled: Boolean(skill?.enabled),
+                    order: Number(skill?.order ?? index + 1),
+                }))
+                .sort((a, b) => a.order - b.order),
         [content.skills]
     );
 
@@ -43,11 +71,14 @@ export default function SkillsPage() {
     const [iconSearch, setIconSearch] = useState("");
     const [persisting, setPersisting] = useState(false);
 
-    const filteredIcons = useMemo(() => filterSkillIconOptions(iconSearch), [iconSearch]);
+    const filteredIcons = useMemo(
+        () => filterSkillIconOptions(iconSearch),
+        [iconSearch]
+    );
 
     function openNew() {
         setEditing({
-            id: -Date.now(),
+            id: undefined,
             name: "",
             description: "",
             category: "Front-end",
@@ -76,10 +107,15 @@ export default function SkillsPage() {
         try {
             setPersisting(true);
 
+            const payload = normalizeOrders(nextSkills).map((skill) => ({
+                ...skill,
+                id: typeof skill.id === "number" ? skill.id : undefined,
+            }));
+
             const response = await fetch("/api/skills", {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(normalizeOrders(nextSkills)),
+                body: JSON.stringify(payload),
             });
 
             if (!response.ok) {
@@ -95,9 +131,24 @@ export default function SkillsPage() {
                         id: typeof skill?.id === "number" ? skill.id : undefined,
                         name: skill?.name ?? "",
                         description: skill?.description ?? "",
-                        category: skill?.category ?? "Outros",
-                        level: skill?.level ?? "",
-                        iconKey: skill?.iconKey ?? "gear",
+                        category:
+                            skill?.category === "Front-end" ||
+                                skill?.category === "Back-end" ||
+                                skill?.category === "Database" ||
+                                skill?.category === "Outros"
+                                ? skill.category
+                                : "Outros",
+                        level:
+                            skill?.level === "Iniciante" ||
+                                skill?.level === "Intermediario" ||
+                                skill?.level === "Avancado" ||
+                                skill?.level === ""
+                                ? skill.level
+                                : "",
+                        iconKey:
+                            typeof skill?.iconKey === "string"
+                                ? (skill.iconKey as SkillIconKey)
+                                : "gear",
                         enabled: Boolean(skill?.enabled),
                         order: Number(skill?.order ?? index + 1),
                     }))
@@ -107,7 +158,10 @@ export default function SkillsPage() {
             return true;
         } catch (error) {
             console.error(error);
-            notify({ type: "error", text: "Unable to save skills to the database." });
+            notify({
+                type: "error",
+                text: "Unable to save skills to the database.",
+            });
             return false;
         } finally {
             setPersisting(false);
@@ -117,16 +171,22 @@ export default function SkillsPage() {
     async function saveSkill() {
         if (!editing) return;
 
-        const nextSkill = {
+        const nextSkill: SkillForm = {
             ...editing,
+            id: editing.id ?? undefined,
             name: editing.name.trim(),
             description: editing.description.trim(),
             order: editing.order > 0 ? editing.order : skills.length + 1,
         };
 
-        const exists = skills.some((skill) => skill.id === editing.id);
-        const nextSkills = exists
-            ? skills.map((skill) => (skill.id === editing.id ? nextSkill : skill))
+        const exists =
+            editing.id !== undefined &&
+            skills.some((skill) => skill.id === editing.id);
+
+        const nextSkills: SkillForm[] = exists
+            ? skills.map((skill) =>
+                skill.id === editing.id ? nextSkill : skill
+            )
             : [...skills, nextSkill];
 
         const saved = await persistSkills(nextSkills);
@@ -149,7 +209,7 @@ export default function SkillsPage() {
     }
 
     async function toggleEnabled(id: number | undefined, enabled: boolean) {
-        const nextSkills = skills.map((skill) =>
+        const nextSkills: SkillForm[] = skills.map((skill) =>
             skill.id === id ? { ...skill, enabled } : skill
         );
 
@@ -186,7 +246,10 @@ export default function SkillsPage() {
                     </thead>
                     <tbody>
                         {skills.map((skill, index) => (
-                            <tr key={`${skill.id ?? "skill"}-${skill.order}-${index}`} className="border-t">
+                            <tr
+                                key={`${skill.id ?? "skill"}-${skill.order}-${index}`}
+                                className="border-t"
+                            >
                                 <td className="p-3 align-top">
                                     <div className="inline-flex rounded-xl border bg-slate-950 px-3 py-3 text-white">
                                         {renderSkillIcon(skill.iconKey)}
@@ -194,15 +257,33 @@ export default function SkillsPage() {
                                 </td>
                                 <td className="p-3">
                                     <div className="font-medium">{skill.name}</div>
-                                    <div className="mt-1 text-xs text-slate-500">{skill.description || "No description"}</div>
+                                    <div className="mt-1 text-xs text-slate-500">
+                                        {skill.description || "No description"}
+                                    </div>
                                 </td>
-                                <td className="p-3">{skill.category === "Outros" ? "Other" : skill.category}</td>
-                                <td className="p-3">{skill.level === "Iniciante" ? "Beginner" : skill.level === "Intermediario" ? "Intermediate" : skill.level === "Avancado" ? "Advanced" : skill.level || "-"}</td>
-                                <td className="p-3">{String(skill.order).padStart(2, "0")}</td>
+                                <td className="p-3">
+                                    {skill.category === "Outros"
+                                        ? "Other"
+                                        : skill.category}
+                                </td>
+                                <td className="p-3">
+                                    {skill.level === "Iniciante"
+                                        ? "Beginner"
+                                        : skill.level === "Intermediario"
+                                            ? "Intermediate"
+                                            : skill.level === "Avancado"
+                                                ? "Advanced"
+                                                : skill.level || "-"}
+                                </td>
+                                <td className="p-3">
+                                    {String(skill.order).padStart(2, "0")}
+                                </td>
                                 <td className="p-3">
                                     <Toggle
                                         checked={skill.enabled}
-                                        onChange={(value) => void toggleEnabled(skill.id, value)}
+                                        onChange={(value) =>
+                                            void toggleEnabled(skill.id, value)
+                                        }
                                     />
                                 </td>
                                 <td className="p-3 text-right">
@@ -226,6 +307,7 @@ export default function SkillsPage() {
                                 </td>
                             </tr>
                         ))}
+
                         {skills.length === 0 ? (
                             <tr>
                                 <td className="p-4 text-slate-500" colSpan={7}>
@@ -248,7 +330,9 @@ export default function SkillsPage() {
                             <input
                                 className="w-full rounded-md border px-3 py-2"
                                 value={editing.name}
-                                onChange={(e) => setEditing({ ...editing, name: e.target.value })}
+                                onChange={(e) =>
+                                    setEditing({ ...editing, name: e.target.value })
+                                }
                             />
                         </FormField>
 
@@ -256,7 +340,12 @@ export default function SkillsPage() {
                             <textarea
                                 className="h-28 w-full rounded-md border px-3 py-2"
                                 value={editing.description}
-                                onChange={(e) => setEditing({ ...editing, description: e.target.value })}
+                                onChange={(e) =>
+                                    setEditing({
+                                        ...editing,
+                                        description: e.target.value,
+                                    })
+                                }
                             />
                         </FormField>
 
@@ -266,12 +355,15 @@ export default function SkillsPage() {
                                     className="w-full rounded-md border px-3 py-2"
                                     value={editing.category}
                                     onChange={(e) =>
-                                        setEditing({ ...editing, category: e.target.value as SkillForm["category"] })
+                                        setEditing({
+                                            ...editing,
+                                            category: e.target.value as SkillForm["category"],
+                                        })
                                     }
                                 >
-                                    <option>Front-end</option>
-                                    <option>Back-end</option>
-                                    <option>Database</option>
+                                    <option value="Front-end">Front-end</option>
+                                    <option value="Back-end">Back-end</option>
+                                    <option value="Database">Database</option>
                                     <option value="Outros">Other</option>
                                 </select>
                             </FormField>
@@ -281,7 +373,10 @@ export default function SkillsPage() {
                                     className="w-full rounded-md border px-3 py-2"
                                     value={editing.level}
                                     onChange={(e) =>
-                                        setEditing({ ...editing, level: e.target.value as SkillForm["level"] })
+                                        setEditing({
+                                            ...editing,
+                                            level: e.target.value as SkillForm["level"],
+                                        })
                                     }
                                 >
                                     <option value="">No level</option>
@@ -308,7 +403,9 @@ export default function SkillsPage() {
                                     <div className="flex min-h-11 items-center justify-center rounded-md border bg-slate-950 text-white">
                                         {renderSkillIcon(editing.iconKey)}
                                     </div>
-                                    <div className="text-xs text-slate-500">{getSkillIconLabel(editing.iconKey)}</div>
+                                    <div className="text-xs text-slate-500">
+                                        {getSkillIconLabel(editing.iconKey)}
+                                    </div>
                                 </div>
                             </div>
 
@@ -324,15 +421,28 @@ export default function SkillsPage() {
                                                 ? "border-slate-900 bg-slate-900 text-white"
                                                 : "bg-white hover:border-slate-400 hover:bg-slate-100"
                                                 }`}
-                                            onClick={() => setEditing({ ...editing, iconKey: option.value })}
+                                            onClick={() =>
+                                                setEditing({
+                                                    ...editing,
+                                                    iconKey: option.value,
+                                                })
+                                            }
                                         >
-                                            <div className={`mb-2 inline-flex rounded-lg px-2 py-2 ${selected ? "bg-white/10" : "bg-slate-950 text-white"}`}>
+                                            <div
+                                                className={`mb-2 inline-flex rounded-lg px-2 py-2 ${selected
+                                                    ? "bg-white/10"
+                                                    : "bg-slate-950 text-white"
+                                                    }`}
+                                            >
                                                 {renderSkillIcon(option.value)}
                                             </div>
-                                            <div className="text-sm font-medium">{option.label}</div>
+                                            <div className="text-sm font-medium">
+                                                {option.label}
+                                            </div>
                                         </button>
                                     );
                                 })}
+
                                 {filteredIcons.length === 0 ? (
                                     <div className="col-span-full rounded-md border border-dashed bg-white p-4 text-sm text-slate-500">
                                         No icons found for this search.
@@ -348,7 +458,12 @@ export default function SkillsPage() {
                                     min={1}
                                     className="w-full rounded-md border px-3 py-2"
                                     value={editing.order}
-                                    onChange={(e) => setEditing({ ...editing, order: Number(e.target.value) })}
+                                    onChange={(e) =>
+                                        setEditing({
+                                            ...editing,
+                                            order: Number(e.target.value),
+                                        })
+                                    }
                                 />
                             </FormField>
 
@@ -356,7 +471,9 @@ export default function SkillsPage() {
                                 <div className="text-sm font-medium">Active</div>
                                 <Toggle
                                     checked={editing.enabled}
-                                    onChange={(value) => setEditing({ ...editing, enabled: value })}
+                                    onChange={(value) =>
+                                        setEditing({ ...editing, enabled: value })
+                                    }
                                     label={editing.enabled ? "Yes" : "No"}
                                 />
                             </div>
@@ -383,4 +500,3 @@ export default function SkillsPage() {
         </div>
     );
 }
-
