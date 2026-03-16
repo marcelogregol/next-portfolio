@@ -5,12 +5,16 @@ const globalForPrisma = globalThis as unknown as {
     prisma: PrismaClient | undefined;
 };
 
+const databaseUrl =
+    process.env.DATABASE_URL ?? "mysql://root:@localhost:3306/portifolio";
+const connection = new URL(databaseUrl);
+
 const adapter = new PrismaMariaDb({
-    host: "localhost",
-    port: 3306,
-    user: "root",
-    password: "",
-    database: "portifolio",
+    host: connection.hostname,
+    port: Number(connection.port || "3306"),
+    user: decodeURIComponent(connection.username),
+    password: decodeURIComponent(connection.password),
+    database: connection.pathname.replace(/^\//, ""),
 });
 
 export const prisma =
