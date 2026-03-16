@@ -1,4 +1,4 @@
-import { findHero, getHeroContent, ensureHeroTable } from "@/lib/hero";
+import { getHeroContent } from "@/lib/hero";
 import { hasAdminSession } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
@@ -27,36 +27,36 @@ export async function PUT(req: NextRequest) {
     }
 
     try {
-        await ensureHeroTable();
         const body = await req.json();
-        const hero = await findHero();
+        const hero = await prisma.hero.findFirst({
+            orderBy: { id: "asc" },
+        });
 
         if (!hero) {
-            await prisma.$executeRaw`
-                INSERT INTO hero (greeting, title, subtitle, cta1Text, cta1Href, cta2Text, cta2Href)
-                VALUES (
-                    ${body.greeting ?? ""},
-                    ${body.title ?? ""},
-                    ${body.subtitle ?? ""},
-                    ${body.cta1Text ?? ""},
-                    ${body.cta1Href ?? ""},
-                    ${body.cta2Text ?? ""},
-                    ${body.cta2Href ?? ""}
-                )
-            `;
+            await prisma.hero.create({
+                data: {
+                    greeting: body.greeting ?? "",
+                    title: body.title ?? "",
+                    subtitle: body.subtitle ?? "",
+                    cta1Text: body.cta1Text ?? "",
+                    cta1Href: body.cta1Href ?? "",
+                    cta2Text: body.cta2Text ?? "",
+                    cta2Href: body.cta2Href ?? "",
+                },
+            });
         } else {
-            await prisma.$executeRaw`
-                UPDATE hero
-                SET
-                    greeting = ${body.greeting ?? ""},
-                    title = ${body.title ?? ""},
-                    subtitle = ${body.subtitle ?? ""},
-                    cta1Text = ${body.cta1Text ?? ""},
-                    cta1Href = ${body.cta1Href ?? ""},
-                    cta2Text = ${body.cta2Text ?? ""},
-                    cta2Href = ${body.cta2Href ?? ""}
-                WHERE id = ${hero.id}
-            `;
+            await prisma.hero.update({
+                where: { id: hero.id },
+                data: {
+                    greeting: body.greeting ?? "",
+                    title: body.title ?? "",
+                    subtitle: body.subtitle ?? "",
+                    cta1Text: body.cta1Text ?? "",
+                    cta1Href: body.cta1Href ?? "",
+                    cta2Text: body.cta2Text ?? "",
+                    cta2Href: body.cta2Href ?? "",
+                },
+            });
         }
 
         const updatedHero = await getHeroContent();
