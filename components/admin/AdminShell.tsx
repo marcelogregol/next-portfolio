@@ -231,37 +231,73 @@ export function AdminShell({ children }: { children: ReactNode }) {
         try {
             setSaving(true);
 
-            const [heroRes, aboutRes, skillsRes, projectsRes, contactRes] = await Promise.all([
-                fetch("/api/hero", {
+            const requestConfigs = [
+                {
+                    key: "hero",
+                    run: () => fetch("/api/hero", {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(content.hero),
-                }),
-                fetch("/api/about", {
+                    }),
+                },
+                {
+                    key: "about",
+                    run: () => fetch("/api/about", {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(content.about),
-                }),
-                fetch("/api/skills", {
+                    }),
+                },
+                {
+                    key: "skills",
+                    run: () => fetch("/api/skills", {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(content.skills),
-                }),
-                fetch("/api/projects", {
+                    }),
+                },
+                {
+                    key: "projects",
+                    run: () => fetch("/api/projects", {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(content.projects),
-                }),
-                fetch("/api/contact", {
+                    }),
+                },
+                {
+                    key: "contact",
+                    run: () => fetch("/api/contact", {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(content.contact),
-                }),
-            ]);
+                    }),
+                },
+            ] as const;
 
-            if (!heroRes.ok || !aboutRes.ok || !skillsRes.ok || !projectsRes.ok || !contactRes.ok) {
-                throw new Error("Failed to publish content");
+            const responses: Response[] = [];
+
+            for (const request of requestConfigs) {
+                const response = await request.run();
+
+                if (!response.ok) {
+                    let message = `Failed to publish ${request.key}.`;
+
+                    try {
+                        const data = await response.json();
+                        if (typeof data?.error === "string" && data.error.trim()) {
+                            message = `${request.key}: ${data.error}`;
+                        }
+                    } catch {
+                        // Ignore JSON parsing issues and keep the fallback message.
+                    }
+
+                    throw new Error(message);
+                }
+
+                responses.push(response);
             }
+
+            const [heroRes, aboutRes, skillsRes, projectsRes, contactRes] = responses;
 
             const updatedHero = await heroRes.json();
             const updatedAbout = await aboutRes.json();
@@ -329,7 +365,10 @@ export function AdminShell({ children }: { children: ReactNode }) {
             notify({ type: "success", text: "Content published successfully." });
         } catch (error) {
             console.error(error);
-            notify({ type: "error", text: "Unable to publish right now." });
+            notify({
+                type: "error",
+                text: error instanceof Error ? error.message : "Unable to publish right now.",
+            });
         } finally {
             setSaving(false);
         }
