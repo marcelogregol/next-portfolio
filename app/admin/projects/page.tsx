@@ -1,6 +1,4 @@
 "use client";
-
-import Image from "next/image";
 import { useMemo, useState } from "react";
 import { SectionHeader } from "@/components/admin/SectionHeader";
 import { FormField } from "@/components/admin/FormField";
@@ -313,14 +311,19 @@ export default function ProjectsPage() {
                         >
                             <div className="grid gap-3">
                                 <div className="flex flex-col gap-3 rounded-lg border border-slate-200 p-3 md:flex-row md:items-center">
-                                    <div className="relative h-28 w-full overflow-hidden rounded-md bg-slate-100 md:w-44">
-                                        <Image
+                                    <div className="h-28 w-full overflow-hidden rounded-md bg-slate-100 md:w-44">
+                                        <img
                                             src={editing.imageUrl || "/images/demo.jpg"}
                                             alt={editing.title || "Project preview"}
-                                            fill
-                                            className="object-cover"
-                                            sizes="176px"
-                                            unoptimized
+                                            className="h-full w-full object-cover"
+                                            loading="lazy"
+                                            onError={(e) => {
+                                                if (e.currentTarget.src.endsWith("/images/demo.jpg")) {
+                                                    return;
+                                                }
+
+                                                e.currentTarget.src = "/images/demo.jpg";
+                                            }}
                                         />
                                     </div>
 
