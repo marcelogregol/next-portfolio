@@ -320,6 +320,7 @@ export default function ProjectsPage() {
                                             fill
                                             className="object-cover"
                                             sizes="176px"
+                                            unoptimized
                                         />
                                     </div>
 
