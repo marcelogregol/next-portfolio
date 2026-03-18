@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 type ProjectCardData = {
     title: string;
@@ -13,15 +13,21 @@ type ProjectCardData = {
 };
 
 export default function ProjectCard({ p }: { p: ProjectCardData }) {
+    const [imageSrc, setImageSrc] = useState(p.imageUrl || "/images/demo.jpg");
+
     return (
         <div className="glass glass-hover overflow-hidden rounded-2xl">
             <div className="border-stroke relative aspect-[16/9] border-b">
-                <Image
-                    src={p.imageUrl || "/images/demo.jpg"}
+                <img
+                    src={imageSrc}
                     alt={p.title}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 1024px) 100vw, 33vw"
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                    onError={() => {
+                        if (imageSrc !== "/images/demo.jpg") {
+                            setImageSrc("/images/demo.jpg");
+                        }
+                    }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-slate-950/10 to-transparent" />
             </div>
