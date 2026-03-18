@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useMemo, useState } from "react";
 import { SectionHeader } from "@/components/admin/SectionHeader";
 import { FormField } from "@/components/admin/FormField";
@@ -32,6 +33,7 @@ export default function ProjectsPage() {
     const [open, setOpen] = useState(false);
     const [editing, setEditing] = useState<ProjectForm | null>(null);
     const [persisting, setPersisting] = useState(false);
+    const [uploadingImage, setUploadingImage] = useState(false);
 
     function openNew() {
         setEditing({
@@ -58,6 +60,42 @@ export default function ProjectsPage() {
     function closeModal() {
         setOpen(false);
         setEditing(null);
+        setUploadingImage(false);
+    }
+
+    async function uploadProjectImage(file: File) {
+        try {
+            setUploadingImage(true);
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            const response = await fetch("/api/projects/upload", {
+                method: "POST",
+                body: formData,
+            });
+
+            const data = await response.json().catch(() => null);
+
+            if (!response.ok || typeof data?.url !== "string") {
+                throw new Error(
+                    typeof data?.error === "string"
+                        ? data.error
+                        : "Unable to upload image."
+                );
+            }
+
+            setEditing((current) =>
+                current ? { ...current, imageUrl: data.url } : current
+            );
+
+            notify({ type: "success", text: "Image uploaded successfully." });
+        } catch (error) {
+            console.error(error);
+            notify({ type: "error", text: "Unable to upload image." });
+        } finally {
+            setUploadingImage(false);
+        }
     }
 
     async function persistProjects(nextProjects: ProjectForm[]) {
@@ -269,12 +307,53 @@ export default function ProjectsPage() {
                             />
                         </FormField>
 
-                        <FormField label="Project image (URL or /public path)">
-                            <input
-                                className="w-full rounded-md border px-3 py-2"
-                                value={editing.imageUrl}
-                                onChange={(e) => setEditing({ ...editing, imageUrl: e.target.value })}
-                            />
+                        <FormField
+                            label="Project image"
+                            hint="Upload an image or keep a manual path if you prefer."
+                        >
+                            <div className="grid gap-3">
+                                <div className="flex flex-col gap-3 rounded-lg border border-slate-200 p-3 md:flex-row md:items-center">
+                                    <div className="relative h-28 w-full overflow-hidden rounded-md bg-slate-100 md:w-44">
+                                        <Image
+                                            src={editing.imageUrl || "/images/demo.jpg"}
+                                            alt={editing.title || "Project preview"}
+                                            fill
+                                            className="object-cover"
+                                            sizes="176px"
+                                        />
+                                    </div>
+
+                                    <div className="flex-1 space-y-3">
+                                        <input
+                                            type="file"
+                                            accept="image/png,image/jpeg,image/webp,image/gif"
+                                            className="block w-full text-sm"
+                                            onChange={(e) => {
+                                                const file = e.target.files?.[0];
+
+                                                if (file) {
+                                                    void uploadProjectImage(file);
+                                                    e.currentTarget.value = "";
+                                                }
+                                            }}
+                                            disabled={uploadingImage}
+                                        />
+
+                                        <input
+                                            className="w-full rounded-md border px-3 py-2"
+                                            value={editing.imageUrl}
+                                            onChange={(e) => setEditing({ ...editing, imageUrl: e.target.value })}
+                                            placeholder="/uploads/projects/example.png"
+                                        />
+
+                                        <div className="text-xs text-slate-500">
+                                            {uploadingImage
+                                                ? "Uploading image..."
+                                                : "Recommended: upload the file and let the admin fill the path automatically."}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </FormField>
 
                         <div className="grid gap-3 md:grid-cols-2">
