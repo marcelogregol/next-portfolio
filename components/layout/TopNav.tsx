@@ -25,7 +25,7 @@ export default function TopNav() {
             <div className="container-base flex h-16 items-center justify-between">
                 <a href="#top" className="flex items-center" aria-label="Back to top">
                     <Image
-                        src="/images/mrg.png"
+                        src="/images/MRG.png"
                         alt="MRG logo"
                         width={100}
                         height={30}
