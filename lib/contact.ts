@@ -1,5 +1,4 @@
 import { prisma } from "./prisma";
-import { ensureContactTable } from "./content-tables";
 
 export type ContactContent = {
     id: number | null;
@@ -27,8 +26,6 @@ export const defaultContact: ContactContent = {
 
 export async function getContactContent() {
     try {
-        await ensureContactTable();
-
         const row = await prisma.contact.findFirst({
             orderBy: { id: "asc" },
         });
@@ -41,8 +38,6 @@ export async function getContactContent() {
 }
 
 export async function saveContact(input: ContactContent) {
-    await ensureContactTable();
-
     const existing = await prisma.contact.findFirst({
         orderBy: { id: "asc" },
     });

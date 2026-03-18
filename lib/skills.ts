@@ -1,6 +1,5 @@
 import { prisma } from "./prisma";
 import { normalizeSkillIconKey, type SkillIconKey } from "./skill-icons";
-import { ensureSkillsTable } from "./content-tables";
 
 export type SkillContent = {
     id: number | null;
@@ -187,8 +186,6 @@ async function replaceSkillsInDb(input: SkillContent[]) {
 }
 
 async function readSkillsFromDb() {
-    await ensureSkillsTable();
-
     const rows = await prisma.skill.findMany({
         orderBy: [{ displayOrder: "asc" }, { id: "asc" }],
     });
@@ -229,8 +226,6 @@ export async function getEnabledSkills() {
 }
 
 export async function saveSkills(input: SkillContent[]) {
-    await ensureSkillsTable();
-
     const dedupedSkills = dedupeSkills(input);
     await replaceSkillsInDb(dedupedSkills);
 

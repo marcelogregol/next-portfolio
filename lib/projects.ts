@@ -1,5 +1,4 @@
 import { prisma } from "./prisma";
-import { ensureProjectsTable } from "./content-tables";
 
 export type ProjectContent = {
     id: number | null;
@@ -100,8 +99,6 @@ function mapProject(row: ProjectRow): ProjectContent {
 
 export async function getProjectsContent() {
     try {
-        await ensureProjectsTable();
-
         const rows = await prisma.project.findMany({
             orderBy: [{ displayOrder: "asc" }, { id: "asc" }],
         });
@@ -123,8 +120,6 @@ export async function getEnabledProjects() {
 }
 
 export async function saveProjects(input: ProjectContent[]) {
-    await ensureProjectsTable();
-
     await prisma.project.deleteMany();
 
     for (const [index, project] of input.entries()) {

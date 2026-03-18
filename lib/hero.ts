@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import { ensureHeroTable } from "./content-tables";
 
 export type HeroContent = {
     id: number | null;
@@ -26,8 +25,6 @@ export const defaultHero: HeroContent = {
 
 export async function getHeroContent() {
     try {
-        await ensureHeroTable();
-
         const hero = await prisma.hero.findFirst({
             orderBy: { id: "asc" },
         });
@@ -40,8 +37,6 @@ export async function getHeroContent() {
 }
 
 export async function saveHeroContent(input: HeroContent) {
-    await ensureHeroTable();
-
     const existing = await prisma.hero.findFirst({
         orderBy: { id: "asc" },
     });

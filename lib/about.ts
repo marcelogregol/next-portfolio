@@ -1,5 +1,4 @@
 import { prisma } from "./prisma";
-import { ensureAboutTables } from "./content-tables";
 
 export type AboutContent = {
     id: number | null;
@@ -25,8 +24,6 @@ export const defaultAbout: AboutContent = {
 
 export async function getAbout() {
     try {
-        await ensureAboutTables();
-
         const about = await prisma.about.findFirst({
             include: {
                 abouthighlight: {
@@ -55,8 +52,6 @@ export async function getAbout() {
 }
 
 export async function saveAbout(input: { title: string; text: string; highlights: string[] }) {
-    await ensureAboutTables();
-
     let about = await prisma.about.findFirst();
 
     if (!about) {
