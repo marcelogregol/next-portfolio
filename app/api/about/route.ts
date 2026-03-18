@@ -1,18 +1,11 @@
 import { hasAdminSession } from "@/lib/admin-auth";
-import { prisma } from "@/lib/prisma";
+import { getAbout, saveAbout } from "@/lib/about";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
     try {
-        const about = await prisma.about.findFirst();
-
-        return NextResponse.json(
-            about ?? {
-                id: null,
-                title: "",
-                text: "",
-            }
-        );
+        const about = await getAbout();
+        return NextResponse.json(about);
     } catch (error) {
         console.error("GET /api/about error:", error);
 
@@ -33,27 +26,13 @@ export async function PUT(req: NextRequest) {
 
     try {
         const body = await req.json();
-
-        let about = await prisma.about.findFirst();
-
-        if (!about) {
-            about = await prisma.about.create({
-                data: {
-                    title: body.title ?? "",
-                    text: body.text ?? "",
-                    updatedAt: new Date(),
-                },
-            });
-        } else {
-            about = await prisma.about.update({
-                where: { id: about.id },
-                data: {
-                    title: body.title ?? "",
-                    text: body.text ?? "",
-                    updatedAt: new Date(),
-                },
-            });
-        }
+        const about = await saveAbout({
+            title: body.title ?? "",
+            text: body.text ?? "",
+            highlights: Array.isArray(body.highlights)
+                ? body.highlights.filter((item: unknown) => typeof item === "string")
+                : [],
+        });
 
         return NextResponse.json(about);
     } catch (error) {

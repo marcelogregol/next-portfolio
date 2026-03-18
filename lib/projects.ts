@@ -1,4 +1,5 @@
 import { prisma } from "./prisma";
+import { ensureProjectsTable } from "./content-tables";
 
 export type ProjectContent = {
     id: number | null;
@@ -95,10 +96,6 @@ function mapProject(row: ProjectRow): ProjectContent {
         enabled: Boolean(row.enabled),
         order: row.displayOrder,
     };
-}
-
-export async function ensureProjectsTable() {
-    return;
 }
 
 export async function getProjectsContent() {

@@ -287,6 +287,14 @@ export function AdminShell({ children }: { children: ReactNode }) {
                         if (typeof data?.error === "string" && data.error.trim()) {
                             message = `${request.key}: ${data.error}`;
                         }
+
+                        if (typeof data?.details === "string" && data.details.trim()) {
+                            message = `${message} (${data.details})`;
+                        }
+
+                        if (typeof data?.code === "string" && data.code.trim()) {
+                            message = `${message} [${data.code}]`;
+                        }
                     } catch {
                         // Ignore JSON parsing issues and keep the fallback message.
                     }

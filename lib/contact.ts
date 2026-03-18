@@ -1,4 +1,5 @@
 import { prisma } from "./prisma";
+import { ensureContactTable } from "./content-tables";
 
 export type ContactContent = {
     id: number | null;
@@ -23,10 +24,6 @@ export const defaultContact: ContactContent = {
     ctaButtonText: "Get in Touch",
     ctaButtonHref: "#contact",
 };
-
-export async function ensureContactTable() {
-    return;
-}
 
 export async function getContactContent() {
     try {

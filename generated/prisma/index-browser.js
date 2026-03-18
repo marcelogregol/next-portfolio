@@ -134,6 +134,62 @@ exports.Prisma.AbouthighlightScalarFieldEnum = {
   title: 'title'
 };
 
+exports.Prisma.HeroScalarFieldEnum = {
+  id: 'id',
+  greeting: 'greeting',
+  title: 'title',
+  subtitle: 'subtitle',
+  cta1Text: 'cta1Text',
+  cta1Href: 'cta1Href',
+  cta2Text: 'cta2Text',
+  cta2Href: 'cta2Href',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SkillScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  category: 'category',
+  level: 'level',
+  iconKey: 'iconKey',
+  enabled: 'enabled',
+  displayOrder: 'displayOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ProjectScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  shortDesc: 'shortDesc',
+  longDesc: 'longDesc',
+  tagsJson: 'tagsJson',
+  imageUrl: 'imageUrl',
+  demoUrl: 'demoUrl',
+  codeUrl: 'codeUrl',
+  featured: 'featured',
+  enabled: 'enabled',
+  displayOrder: 'displayOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ContactScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  whatsapp: 'whatsapp',
+  linkedin: 'linkedin',
+  github: 'github',
+  ctaTitle: 'ctaTitle',
+  ctaSubtitle: 'ctaSubtitle',
+  ctaButtonText: 'ctaButtonText',
+  ctaButtonHref: 'ctaButtonHref',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -148,10 +204,58 @@ exports.Prisma.abouthighlightOrderByRelevanceFieldEnum = {
   title: 'title'
 };
 
+exports.Prisma.heroOrderByRelevanceFieldEnum = {
+  greeting: 'greeting',
+  title: 'title',
+  subtitle: 'subtitle',
+  cta1Text: 'cta1Text',
+  cta1Href: 'cta1Href',
+  cta2Text: 'cta2Text',
+  cta2Href: 'cta2Href'
+};
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
+exports.Prisma.skillOrderByRelevanceFieldEnum = {
+  name: 'name',
+  description: 'description',
+  category: 'category',
+  level: 'level',
+  iconKey: 'iconKey'
+};
+
+exports.Prisma.projectOrderByRelevanceFieldEnum = {
+  title: 'title',
+  shortDesc: 'shortDesc',
+  longDesc: 'longDesc',
+  tagsJson: 'tagsJson',
+  imageUrl: 'imageUrl',
+  demoUrl: 'demoUrl',
+  codeUrl: 'codeUrl'
+};
+
+exports.Prisma.contactOrderByRelevanceFieldEnum = {
+  email: 'email',
+  whatsapp: 'whatsapp',
+  linkedin: 'linkedin',
+  github: 'github',
+  ctaTitle: 'ctaTitle',
+  ctaSubtitle: 'ctaSubtitle',
+  ctaButtonText: 'ctaButtonText',
+  ctaButtonHref: 'ctaButtonHref'
+};
+
 
 exports.Prisma.ModelName = {
   about: 'about',
-  abouthighlight: 'abouthighlight'
+  abouthighlight: 'abouthighlight',
+  hero: 'hero',
+  skill: 'skill',
+  project: 'project',
+  contact: 'contact'
 };
 
 /**

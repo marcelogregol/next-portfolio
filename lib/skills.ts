@@ -1,5 +1,6 @@
 import { prisma } from "./prisma";
 import { normalizeSkillIconKey, type SkillIconKey } from "./skill-icons";
+import { ensureSkillsTable } from "./content-tables";
 
 export type SkillContent = {
     id: number | null;
@@ -183,10 +184,6 @@ async function replaceSkillsInDb(input: SkillContent[]) {
             });
         }
     });
-}
-
-export async function ensureSkillsTable() {
-    return;
 }
 
 async function readSkillsFromDb() {
