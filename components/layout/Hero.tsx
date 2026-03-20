@@ -39,16 +39,16 @@ export default async function Hero() {
                 </div>
                 <div className="w-full md:w-1/2">
                     <Image
-                        src="/images/banner.png"
-                        alt="Photo of Marcelo"
+                        src="/images/hero.png"
+                        alt="Binary technology background"
                         width={400}
                         height={400}
                         priority
+                        unoptimized
                         className="mx-auto h-auto w-full max-w-[320px] rounded-[2rem] object-cover sm:max-w-[380px] md:max-w-none"
                     />
                 </div>
             </div>
-            <div className="section-glow"></div>
         </section>
     );
 }
