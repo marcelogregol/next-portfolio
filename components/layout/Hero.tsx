@@ -1,6 +1,10 @@
 import { getHeroContent } from "@/lib/hero";
 import Image from "next/image";
 
+function isExternalHref(href?: string) {
+    return /^https?:\/\//i.test(href ?? "");
+}
+
 function normalizeProjectHref(href?: string) {
     if (href === "#projetos") return "#projects";
     return href || "#projects";
@@ -12,6 +16,10 @@ function normalizeContactHref(href?: string) {
 
 export default async function Hero() {
     const hero = await getHeroContent();
+    const projectHref = normalizeProjectHref(hero.cta1Href);
+    const contactHref = normalizeContactHref(hero.cta2Href);
+    const projectExternal = isExternalHref(projectHref);
+    const contactExternal = isExternalHref(contactHref);
 
     return (
         <section className="section-shell section-divider section-surface-hero relative overflow-hidden pt-8 md:pt-12">
@@ -29,10 +37,20 @@ export default async function Hero() {
                     </p>
 
                     <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap md:mt-7">
-                        <a className="btn-ghost min-h-12 w-full sm:w-auto" href={normalizeProjectHref(hero.cta1Href)}>
+                        <a
+                            className="btn-ghost min-h-12 w-full sm:w-auto"
+                            href={projectHref}
+                            target={projectExternal ? "_blank" : undefined}
+                            rel={projectExternal ? "noreferrer" : undefined}
+                        >
                             {hero.cta1Text || "View Projects"}
                         </a>
-                        <a className="btn-ghost min-h-12 w-full sm:w-auto" href={normalizeContactHref(hero.cta2Href)}>
+                        <a
+                            className="btn-ghost min-h-12 w-full sm:w-auto"
+                            href={contactHref}
+                            target={contactExternal ? "_blank" : undefined}
+                            rel={contactExternal ? "noreferrer" : undefined}
+                        >
                             {hero.cta2Text || "Get in Touch"}
                         </a>
                     </div>
