@@ -6,7 +6,7 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 function getDatabaseUrl() {
-    return process.env.DATABASE_URL ?? "mysql://root:@localhost:3306/portifolio";
+    return process.env.DATABASE_URL ?? "mariadb://root:@localhost:3306/portifolio";
 }
 
 export const prisma =
