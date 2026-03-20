@@ -10,6 +10,17 @@ const allowedTypes = new Set([
     "image/png",
     "image/webp",
     "image/gif",
+    "image/jpg",
+    "image/x-png",
+]);
+
+const allowedExtensions = new Set([
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".webp",
+    ".gif",
+    ".jfif",
 ]);
 
 function sanitizeFileName(value: string) {
@@ -18,6 +29,11 @@ function sanitizeFileName(value: string) {
         .replace(/[^a-z0-9.-]+/g, "-")
         .replace(/-+/g, "-")
         .replace(/^-|-$/g, "");
+}
+
+function isAllowedImage(file: File) {
+    const extension = path.extname(file.name || "").toLowerCase();
+    return allowedTypes.has(file.type) || allowedExtensions.has(extension);
 }
 
 export async function POST(req: NextRequest) {
@@ -36,9 +52,9 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        if (!allowedTypes.has(file.type)) {
+        if (!isAllowedImage(file)) {
             return NextResponse.json(
-                { error: "Formato invalido. Use JPG, PNG, WEBP ou GIF." },
+                { error: "Formato invalido. Use JPG, JPEG, PNG, WEBP, GIF ou JFIF." },
                 { status: 400 }
             );
         }
