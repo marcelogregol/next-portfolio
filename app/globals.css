@@ -327,3 +327,34 @@ body {
     background: #2563eb;
     border-radius: 10px;
 }
+
+@media (max-width: 767px) {
+    .section-shell {
+        padding: 2.25rem 1rem;
+    }
+
+    .container-base {
+        width: 100%;
+    }
+
+    .nav-shell {
+        padding-inline: 1rem;
+    }
+
+    .btn-ghost {
+        min-height: 2.2rem;
+        padding: 0.52rem 0.8rem;
+        border-radius: 0.62rem;
+        font-size: 0.8rem;
+    }
+
+    .badge {
+        padding: 0.3rem 0.65rem;
+        font-size: 0.7rem;
+        line-height: 0.95rem;
+    }
+
+    .glass {
+        backdrop-filter: blur(10px);
+    }
+}
