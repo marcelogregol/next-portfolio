@@ -30,6 +30,7 @@ export default function TopNav() {
                         width={100}
                         height={30}
                         priority
+                        unoptimized
                         className="h-auto w-[77px] object-contain sm:w-[86px] md:w-[93px]"
                     />
                 </a>
