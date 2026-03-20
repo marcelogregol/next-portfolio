@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { SectionHeader } from "@/components/admin/SectionHeader";
 import { FormField } from "@/components/admin/FormField";
 import { Toggle } from "@/components/admin/Toggle";
@@ -32,6 +32,7 @@ export default function ProjectsPage() {
     const [editing, setEditing] = useState<ProjectForm | null>(null);
     const [persisting, setPersisting] = useState(false);
     const [uploadingImage, setUploadingImage] = useState(false);
+    const imageInputRef = useRef<HTMLInputElement | null>(null);
 
     function openNew() {
         setEditing({
@@ -202,19 +203,19 @@ export default function ProjectsPage() {
     }
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-end justify-between gap-4">
+        <div className="admin-page space-y-5">
+            <div className="admin-page-header flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                 <SectionHeader title="Projects" description="Create, edit and publish the projects shown on the portfolio." />
                 <button
-                    className="h-10 rounded-md bg-slate-900 px-3 text-sm text-white"
+                    className="admin-create-button h-10 rounded-md bg-slate-900 px-3 text-sm text-white lg:self-start"
                     onClick={openNew}
                 >
                     + New project
                 </button>
             </div>
 
-            <div className="overflow-hidden rounded-lg border bg-white">
-                <table className="w-full text-sm">
+            <div className="overflow-x-auto rounded-lg border bg-white">
+                <table className="min-w-[760px] w-full text-sm">
                     <thead className="bg-slate-50 text-left">
                         <tr>
                             <th className="p-3">Title</th>
@@ -272,66 +273,76 @@ export default function ProjectsPage() {
                 onClose={closeModal}
             >
                 {editing ? (
-                    <div className="grid gap-3">
-                        <FormField label="Title">
-                            <input
-                                className="w-full rounded-md border px-3 py-2"
-                                value={editing.title}
-                                onChange={(e) => setEditing({ ...editing, title: e.target.value })}
-                            />
-                        </FormField>
+                    <div className="admin-modal-form admin-projects-modal grid gap-4 pb-1">
+                        <div className="grid gap-4 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)]">
+                            <div className="grid min-w-0 gap-4">
+                                <FormField label="Title">
+                                    <input
+                                        className="w-full rounded-md border px-3 py-2"
+                                        value={editing.title}
+                                        onChange={(e) => setEditing({ ...editing, title: e.target.value })}
+                                    />
+                                </FormField>
 
-                        <FormField label="Short description (card)">
-                            <input
-                                className="w-full rounded-md border px-3 py-2"
-                                value={editing.shortDesc}
-                                onChange={(e) => setEditing({ ...editing, shortDesc: e.target.value })}
-                            />
-                        </FormField>
+                                <FormField label="Short description (card)">
+                                    <input
+                                        className="w-full rounded-md border px-3 py-2"
+                                        value={editing.shortDesc}
+                                        onChange={(e) => setEditing({ ...editing, shortDesc: e.target.value })}
+                                    />
+                                </FormField>
 
-                        <FormField label="Long description">
-                            <textarea
-                                className="h-32 w-full rounded-md border px-3 py-2"
-                                value={editing.longDesc}
-                                onChange={(e) => setEditing({ ...editing, longDesc: e.target.value })}
-                            />
-                        </FormField>
+                                <FormField label="Long description">
+                                    <textarea
+                                        className="admin-textarea-sm h-28 w-full rounded-md border px-3 py-2"
+                                        value={editing.longDesc}
+                                        onChange={(e) => setEditing({ ...editing, longDesc: e.target.value })}
+                                    />
+                                </FormField>
 
-                        <FormField label="Tags (stack)">
-                            <TagInput
-                                value={editing.tags}
-                                onChange={(tags) => setEditing({ ...editing, tags })}
-                                placeholder="Example: React"
-                            />
-                        </FormField>
+                                <FormField label="Tags (stack)">
+                                    <TagInput
+                                        value={editing.tags}
+                                        onChange={(tags) => setEditing({ ...editing, tags })}
+                                        placeholder="Example: React"
+                                    />
+                                </FormField>
+                            </div>
 
-                        <FormField
-                            label="Project image"
-                            hint="Upload an image or keep a manual path if you prefer."
-                        >
-                            <div className="grid gap-3">
-                                <div className="flex flex-col gap-3 rounded-lg border border-slate-200 p-3 md:flex-row md:items-center">
-                                    <div className="h-28 w-full overflow-hidden rounded-md bg-slate-100 md:w-44">
-                                        <img
-                                            src={editing.imageUrl || "/images/demo.jpg"}
-                                            alt={editing.title || "Project preview"}
-                                            className="h-full w-full object-cover"
-                                            loading="lazy"
-                                            onError={(e) => {
-                                                if (e.currentTarget.src.endsWith("/images/demo.jpg")) {
-                                                    return;
-                                                }
+                            <FormField
+                                label="Project image"
+                            >
+                                <div className="grid gap-3">
+                                    <div className="admin-project-image-panel grid min-w-0 gap-3 rounded-lg border border-slate-200 p-3">
+                                        <button
+                                            type="button"
+                                            className="group relative block overflow-hidden rounded-md bg-slate-100 text-left"
+                                            onClick={() => imageInputRef.current?.click()}
+                                            disabled={uploadingImage}
+                                        >
+                                            <img
+                                                src={editing.imageUrl || "/images/demo.jpg"}
+                                                alt={editing.title || "Project preview"}
+                                                className="admin-preview-md h-40 w-full object-cover transition group-hover:scale-[1.01]"
+                                                loading="lazy"
+                                                onError={(e) => {
+                                                    if (e.currentTarget.src.endsWith("/images/demo.jpg")) {
+                                                        return;
+                                                    }
 
-                                                e.currentTarget.src = "/images/demo.jpg";
-                                            }}
-                                        />
-                                    </div>
+                                                    e.currentTarget.src = "/images/demo.jpg";
+                                                }}
+                                            />
+                                            <span className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/80 to-transparent px-3 py-3 text-xs font-medium text-white">
+                                                {uploadingImage ? "Uploading image..." : "Click to upload image"}
+                                            </span>
+                                        </button>
 
-                                    <div className="flex-1 space-y-3">
                                         <input
+                                            ref={imageInputRef}
                                             type="file"
                                             accept="image/png,image/jpeg,image/webp,image/gif"
-                                            className="block w-full text-sm"
+                                            className="hidden"
                                             onChange={(e) => {
                                                 const file = e.target.files?.[0];
 
@@ -343,42 +354,31 @@ export default function ProjectsPage() {
                                             disabled={uploadingImage}
                                         />
 
-                                        <input
-                                            className="w-full rounded-md border px-3 py-2"
-                                            value={editing.imageUrl}
-                                            onChange={(e) => setEditing({ ...editing, imageUrl: e.target.value })}
-                                            placeholder="/uploads/projects/example.png"
-                                        />
-
                                         <div className="text-xs text-slate-500">
-                                            {uploadingImage
-                                                ? "Uploading image..."
-                                                : "Recommended: upload the file and let the admin fill the path automatically."}
+                                            The selected image is saved automatically after upload.
                                         </div>
                                     </div>
+
+                                    <FormField label="Demo URL">
+                                        <input
+                                            className="w-full rounded-md border px-3 py-2"
+                                            value={editing.demoUrl}
+                                            onChange={(e) => setEditing({ ...editing, demoUrl: e.target.value })}
+                                        />
+                                    </FormField>
+
+                                    <FormField label="Source code URL">
+                                        <input
+                                            className="w-full rounded-md border px-3 py-2"
+                                            value={editing.codeUrl}
+                                            onChange={(e) => setEditing({ ...editing, codeUrl: e.target.value })}
+                                        />
+                                    </FormField>
                                 </div>
-                            </div>
-                        </FormField>
-
-                        <div className="grid gap-3 md:grid-cols-2">
-                            <FormField label="Demo URL">
-                                <input
-                                    className="w-full rounded-md border px-3 py-2"
-                                    value={editing.demoUrl}
-                                    onChange={(e) => setEditing({ ...editing, demoUrl: e.target.value })}
-                                />
-                            </FormField>
-
-                            <FormField label="Source code URL">
-                                <input
-                                    className="w-full rounded-md border px-3 py-2"
-                                    value={editing.codeUrl}
-                                    onChange={(e) => setEditing({ ...editing, codeUrl: e.target.value })}
-                                />
                             </FormField>
                         </div>
 
-                        <div className="grid gap-3 md:grid-cols-3">
+                        <div className="grid gap-3 sm:grid-cols-3">
                             <FormField label="Order">
                                 <input
                                     type="number"
@@ -408,7 +408,7 @@ export default function ProjectsPage() {
                             </div>
                         </div>
 
-                        <div className="mt-2 flex justify-end gap-2">
+                        <div className="sticky bottom-0 mt-1 flex w-full justify-end gap-2 border-t bg-white pt-3">
                             <button
                                 className="rounded-md border px-3 py-2 text-sm"
                                 onClick={closeModal}

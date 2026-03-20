@@ -51,11 +51,11 @@ export default function ContactPage() {
     }
 
     return (
-        <div className="space-y-6">
+        <div className="admin-page space-y-6">
             <SectionHeader title="Contact" description="Manage links, contact channels and the final CTA." />
 
-            <div className="grid gap-4 rounded-lg border bg-white p-4">
-                <div className="grid gap-4 md:grid-cols-2">
+            <div className="admin-panel grid gap-4 rounded-lg border bg-white p-4">
+                <div className="admin-subgrid grid gap-4 md:grid-cols-2">
                     <FormField label="Email">
                         <input
                             className="w-full rounded-md border px-3 py-2"
@@ -77,7 +77,7 @@ export default function ContactPage() {
                     </FormField>
                 </div>
 
-                <div className="grid gap-4 md:grid-cols-2">
+                <div className="admin-subgrid grid gap-4 md:grid-cols-2">
                     <FormField label="LinkedIn">
                         <input
                             className="w-full rounded-md border px-3 py-2"
@@ -99,8 +99,8 @@ export default function ContactPage() {
                     </FormField>
                 </div>
 
-                <div className="grid gap-4 rounded-md border p-3">
-                    <div className="text-sm font-semibold">Final CTA</div>
+                <div className="grid gap-3 rounded-md border p-3">
+                    <div className="admin-subtitle text-sm font-semibold">Final CTA</div>
                     <FormField label="Title">
                         <input
                             className="w-full rounded-md border px-3 py-2"
@@ -121,7 +121,7 @@ export default function ContactPage() {
                         />
                     </FormField>
 
-                    <div className="grid gap-4 md:grid-cols-2">
+                    <div className="admin-subgrid grid gap-4 md:grid-cols-2">
                         <FormField label="Button text">
                             <input
                                 className="w-full rounded-md border px-3 py-2"

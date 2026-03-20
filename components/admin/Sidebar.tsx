@@ -15,9 +15,9 @@ export function Sidebar() {
     const path = usePathname();
 
     return (
-        <aside className="sticky top-0 h-screen w-56 border-r bg-white">
+        <aside className="sticky top-0 hidden h-screen w-52 shrink-0 border-r bg-white xl:block">
             <div className="px-4 py-4">
-                <div className="text-lg font-semibold">MRG Admin</div>
+                <div className="text-base font-semibold">MRG Admin</div>
                 <div className="text-xs text-slate-500">Quick editing</div>
             </div>
 

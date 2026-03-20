@@ -11,9 +11,9 @@ export function FormField({
 }) {
     return (
         <label className="block">
-            <div className="mb-1 text-sm font-medium">{label}</div>
+            <div className="admin-field-label mb-1 text-sm font-medium">{label}</div>
             {children}
-            {hint ? <div className="mt-1 text-xs text-slate-500">{hint}</div> : null}
+            {hint ? <div className="admin-field-hint mt-1 text-xs text-slate-500">{hint}</div> : null}
         </label>
     );
 }

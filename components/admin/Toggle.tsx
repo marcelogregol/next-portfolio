@@ -28,7 +28,7 @@ export function Toggle({
                     ].join(" ")}
                 />
             </span>
-            {label ? <span className="text-sm text-slate-700">{label}</span> : null}
+            {label ? <span className="admin-toggle-label text-sm text-slate-700">{label}</span> : null}
         </button>
     );
 }
