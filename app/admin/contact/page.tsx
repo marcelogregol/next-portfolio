@@ -51,11 +51,11 @@ export default function ContactPage() {
     }
 
     return (
-        <div className="admin-page space-y-6">
+        <div className="space-y-6">
             <SectionHeader title="Contact" description="Manage links, contact channels and the final CTA." />
 
-            <div className="admin-panel admin-border grid gap-4 rounded-lg border p-4">
-                <div className="admin-subgrid grid gap-4 md:grid-cols-2">
+            <div className="admin-panel admin-border grid gap-4 rounded-lg border p-4 lg:gap-3 lg:p-3 2xl:gap-4 2xl:p-4">
+                <div className="grid gap-4 md:grid-cols-2">
                     <FormField label="Email">
                         <input
                             className="admin-input"
@@ -77,7 +77,7 @@ export default function ContactPage() {
                     </FormField>
                 </div>
 
-                <div className="admin-subgrid grid gap-4 md:grid-cols-2">
+                <div className="grid gap-4 md:grid-cols-2">
                     <FormField label="LinkedIn">
                         <input
                             className="admin-input"
@@ -100,7 +100,7 @@ export default function ContactPage() {
                 </div>
 
                 <div className="admin-subpanel admin-panel-frame grid gap-3 rounded-md p-3">
-                    <div className="admin-subtitle text-sm font-semibold">Final CTA</div>
+                    <div className="text-sm font-semibold text-white lg:text-xs 2xl:text-sm">Final CTA</div>
                     <FormField label="Title">
                         <input
                             className="admin-input"
@@ -121,7 +121,7 @@ export default function ContactPage() {
                         />
                     </FormField>
 
-                    <div className="admin-subgrid grid gap-4 md:grid-cols-2">
+                    <div className="grid gap-4 md:grid-cols-2">
                         <FormField label="Button text">
                             <input
                                 className="admin-input"
@@ -152,7 +152,7 @@ export default function ContactPage() {
 
                 <div className="flex justify-end">
                     <button
-                        className="admin-primary-btn rounded-md px-4 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-60"
+                        className="admin-primary-btn rounded-md px-4 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 lg:px-[0.7rem] lg:py-[0.45rem] lg:text-xs 2xl:px-4 2xl:py-2 2xl:text-sm"
                         onClick={() => void saveContact()}
                         disabled={saving}
                     >

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { HiXMark } from "react-icons/hi2";
 
 export function TagInput({
     value,
@@ -28,11 +29,14 @@ export function TagInput({
                     <button
                         type="button"
                         key={t}
-                        className="admin-ghost-btn rounded-full px-2 py-1 text-xs"
+                        className="admin-ghost-btn inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs"
                         onClick={() => onChange(value.filter((x) => x !== t))}
                         title="Remove"
                     >
-                        {t} ?
+                        <span>{t}</span>
+                        <span className="inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-sky-200 text-slate-950">
+                            <HiXMark className="h-2 w-2" />
+                        </span>
                     </button>
                 ))}
             </div>
@@ -50,11 +54,7 @@ export function TagInput({
                         }
                     }}
                 />
-                <button
-                    type="button"
-                    className="admin-primary-btn rounded-md px-3 py-2 text-sm text-white"
-                    onClick={add}
-                >
+                <button type="button" className="admin-primary-btn rounded-md px-3 py-2 text-sm" onClick={add}>
                     Add
                 </button>
             </div>

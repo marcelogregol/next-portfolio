@@ -391,7 +391,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
                     <Sidebar />
                     <div className="min-w-0 flex-1">
                         <Topbar onPublish={publishAll} />
-                        <main className="admin-main mx-auto max-w-[72rem] px-4 py-6">
+                        <main className="mx-auto max-w-[72rem] px-4 py-6 lg:py-4 2xl:py-6">
                             {notice ? (
                                 <p
                                     className={`admin-notice mb-4 rounded-md border px-3 py-2 text-sm ${notice.type === "success"

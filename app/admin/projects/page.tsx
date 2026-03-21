@@ -203,11 +203,11 @@ export default function ProjectsPage() {
     }
 
     return (
-        <div className="admin-page space-y-5">
-            <div className="admin-page-header flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div className="space-y-5">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                 <SectionHeader title="Projects" description="Create, edit and publish the projects shown on the portfolio." />
                 <button
-                    className="admin-create-button admin-primary-btn h-10 rounded-md px-3 text-sm text-white lg:self-start"
+                    className="admin-primary-btn h-10 rounded-md px-3 text-sm lg:self-start"
                     onClick={openNew}
                 >
                     + New project
@@ -273,9 +273,9 @@ export default function ProjectsPage() {
                 onClose={closeModal}
             >
                 {editing ? (
-                    <div className="admin-modal-form admin-projects-modal grid gap-4 pb-1">
-                        <div className="grid gap-4 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)]">
-                            <div className="grid min-w-0 gap-4">
+                    <div className="admin-compact-modal grid gap-4 pb-1 lg:gap-3">
+                        <div className="grid gap-4 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-3">
+                            <div className="grid min-w-0 gap-4 lg:gap-3">
                                 <FormField label="Title">
                                     <input
                                         className="admin-input"
@@ -294,7 +294,7 @@ export default function ProjectsPage() {
 
                                 <FormField label="Long description">
                                     <textarea
-                                        className="admin-input admin-textarea-sm h-28"
+                                        className="admin-input h-28 lg:h-[5.5rem] 2xl:h-28"
                                         value={editing.longDesc}
                                         onChange={(e) => setEditing({ ...editing, longDesc: e.target.value })}
                                     />
@@ -312,8 +312,8 @@ export default function ProjectsPage() {
                             <FormField
                                 label="Project image"
                             >
-                                <div className="grid gap-3">
-                                    <div className="admin-project-image-panel admin-subpanel admin-border grid min-w-0 gap-3 rounded-lg border p-0">
+                                <div className="grid gap-3 lg:gap-2.5">
+                                    <div className="admin-subpanel admin-border grid min-w-0 gap-3 rounded-lg border p-0 lg:gap-2.5">
                                         <button
                                             type="button"
                                             className="group relative block w-full overflow-hidden rounded-lg bg-slate-100 text-left"
@@ -323,7 +323,7 @@ export default function ProjectsPage() {
                                             <img
                                                 src={editing.imageUrl || "/images/demo.jpg"}
                                                 alt={editing.title || "Project preview"}
-                                                className="admin-preview-md h-40 w-full object-cover transition group-hover:scale-[1.01]"
+                                                className="h-40 w-full object-cover lg:h-[6.25rem] 2xl:h-40"
                                                 loading="lazy"
                                                 onError={(e) => {
                                                     if (e.currentTarget.src.endsWith("/images/demo.jpg")) {
@@ -333,7 +333,7 @@ export default function ProjectsPage() {
                                                     e.currentTarget.src = "/images/demo.jpg";
                                                 }}
                                             />
-                                            <span className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/80 to-transparent px-3 py-3 text-xs font-medium text-white">
+                                            <span className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/80 to-transparent px-3 py-3 text-xs font-medium text-white lg:py-2 lg:text-[11px] 2xl:py-3 2xl:text-xs">
                                                 {uploadingImage ? "Uploading image..." : "Click to upload image"}
                                             </span>
                                         </button>
@@ -374,7 +374,7 @@ export default function ProjectsPage() {
                             </FormField>
                         </div>
 
-                        <div className="admin-modal-footer flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                        <div className="admin-modal-footer flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between lg:gap-2.5">
                             <div className="grid gap-3 sm:grid-cols-[110px_auto_auto] sm:items-end">
                                 <FormField label="Order">
                                     <input
@@ -387,7 +387,7 @@ export default function ProjectsPage() {
                                 </FormField>
 
                                 <div className="grid gap-1">
-                                    <div className="admin-strong text-sm font-medium">Featured</div>
+                                    <div className="admin-strong text-sm font-medium lg:text-xs 2xl:text-sm">Featured</div>
                                     <Toggle
                                         checked={editing.featured}
                                         onChange={(value) => setEditing({ ...editing, featured: value })}
@@ -396,7 +396,7 @@ export default function ProjectsPage() {
                                 </div>
 
                                 <div className="grid gap-1">
-                                    <div className="admin-strong text-sm font-medium">Active</div>
+                                    <div className="admin-strong text-sm font-medium lg:text-xs 2xl:text-sm">Active</div>
                                     <Toggle
                                         checked={editing.enabled}
                                         onChange={(value) => setEditing({ ...editing, enabled: value })}
@@ -406,19 +406,19 @@ export default function ProjectsPage() {
                             </div>
 
                             <div className="flex justify-end gap-2">
-                            <button
-                                className="admin-ghost-btn rounded-md px-3 py-2 text-sm"
-                                onClick={closeModal}
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                className="admin-primary-btn rounded-md px-3 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-60"
-                                onClick={() => void saveProject()}
-                                disabled={persisting}
-                            >
-                                {persisting ? "Saving..." : "Save"}
-                            </button>
+                                <button
+                                    className="admin-ghost-btn rounded-md px-3 py-2 text-sm lg:px-[0.7rem] lg:py-[0.45rem] lg:text-xs 2xl:px-3 2xl:py-2 2xl:text-sm"
+                                    onClick={closeModal}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    className="admin-primary-btn rounded-md px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 lg:px-[0.7rem] lg:py-[0.45rem] lg:text-xs 2xl:px-3 2xl:py-2 2xl:text-sm"
+                                    onClick={() => void saveProject()}
+                                    disabled={persisting}
+                                >
+                                    {persisting ? "Saving..." : "Save"}
+                                </button>
                             </div>
                         </div>
                     </div>

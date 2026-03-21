@@ -13,12 +13,12 @@ export default async function Footer() {
         <footer id="contact" className="section-shell section-frame section-surface-footer relative overflow-hidden py-6">
             <div className="section-backdrop section-backdrop-footer" />
             <div className="container-base relative z-10 flex flex-col items-center gap-6 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
-                <div>
+                <section>
                     <p className="text-sub">&copy; {new Date().getFullYear()} Marcelo Rizzatti Gregol</p>
                     <p className="text-sub mt-2 text-sm">{contact.email}</p>
-                </div>
+                </section>
 
-                <div className="flex items-center justify-center gap-3 sm:justify-end">
+                <nav className="flex items-center justify-center gap-3 sm:justify-end" aria-label="Social links">
                     <a className="text-2xl transition hover:text-white/80" href={contact.linkedin} target="_blank" rel="noreferrer">
                         <FaLinkedin />
                     </a>
@@ -28,9 +28,9 @@ export default async function Footer() {
                     <a className="text-2xl transition hover:text-white/80" href={getWhatsappHref(contact.whatsapp)} target="_blank" rel="noreferrer">
                         <FaWhatsapp />
                     </a>
-                </div>
+                </nav>
             </div>
-            <div className="section-glow"></div>
+            <div className="section-glow" />
         </footer>
     );
 }

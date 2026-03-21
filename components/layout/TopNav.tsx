@@ -51,7 +51,7 @@ export default function TopNav() {
 
                 <button
                     type="button"
-                    className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-white transition hover:bg-white/10 md:hidden"
+                    className="surface-icon-btn inline-flex h-11 w-11 items-center justify-center rounded-2xl text-white md:hidden"
                     aria-label={open ? "Close menu" : "Open menu"}
                     aria-expanded={open}
                     onClick={() => setOpen((current) => !current)}
@@ -67,7 +67,7 @@ export default function TopNav() {
                             {navItems.map((item) => (
                                 <a
                                     key={item.href}
-                                    className="rounded-2xl px-4 py-3 transition hover:bg-white/8"
+                                    className="rounded-2xl px-4 py-3 transition hover:bg-slate-800/60"
                                     href={item.href}
                                     onClick={handleNavigate}
                                 >

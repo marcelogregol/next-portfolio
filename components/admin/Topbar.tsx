@@ -10,10 +10,10 @@ export function Topbar({
 }) {
     return (
         <header className="admin-topbar sticky top-0 z-10">
-            <div className="admin-topbar-inner mx-auto flex max-w-[72rem] items-center justify-between px-4 py-3">
+            <div className="mx-auto flex max-w-[72rem] items-center justify-between px-4 py-3 lg:px-3.5 lg:py-2.5 2xl:px-4 2xl:py-3">
                 <div className="flex items-center gap-3">
                     <a
-                        className="admin-topbar-link group inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-white transition hover:-translate-y-0.5"
+                        className="admin-topbar-link group inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition hover:-translate-y-0.5 lg:py-[0.45rem] lg:text-xs 2xl:text-sm"
                         href="/"
                         target="_blank"
                         rel="noreferrer"

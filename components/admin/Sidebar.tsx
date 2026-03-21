@@ -16,10 +16,10 @@ export function Sidebar() {
 
     return (
         <aside className="admin-sidebar sticky top-0 hidden h-screen w-52 shrink-0 xl:block">
-            <div className="px-4 py-4">
+            <header className="px-4 py-4">
                 <div className="admin-brand text-base font-semibold">MRG Admin</div>
                 <div className="text-xs text-slate-400">Quick editing</div>
-            </div>
+            </header>
 
             <nav className="px-2">
                 {items.map((it) => {

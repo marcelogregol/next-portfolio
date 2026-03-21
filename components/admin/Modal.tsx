@@ -18,13 +18,18 @@ export function Modal({
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-3 backdrop-blur-sm sm:p-4">
             <div className="admin-modal-panel flex max-h-[calc(100vh-1.5rem)] w-full max-w-3xl flex-col overflow-hidden rounded-lg shadow-xl sm:max-h-[calc(100vh-2rem)]">
-                <div className="admin-modal-header flex items-center justify-between gap-3 px-4 py-3">
-                    <div className="min-w-0 text-sm font-semibold">{title}</div>
-                    <button className="admin-ghost-btn rounded-md px-2 py-1 text-sm" onClick={onClose}>
+                <div className="admin-modal-header flex items-center justify-between gap-3 px-4 py-3 lg:px-3.5 lg:py-2.5 2xl:px-4 2xl:py-3">
+                    <div className="min-w-0 text-sm font-semibold lg:text-xs 2xl:text-sm">{title}</div>
+                    <button
+                        className="admin-ghost-btn rounded-md px-2 py-1 text-sm lg:text-xs 2xl:text-sm"
+                        onClick={onClose}
+                    >
                         Fechar
                     </button>
                 </div>
-                <div className="admin-modal-body min-h-0 overflow-y-auto overflow-x-hidden px-4 py-4">{children}</div>
+                <div className="admin-modal-body min-h-0 overflow-y-auto overflow-x-hidden px-4 py-4 lg:px-3.5 lg:py-3 2xl:px-4 2xl:py-4">
+                    {children}
+                </div>
             </div>
         </div>
     );

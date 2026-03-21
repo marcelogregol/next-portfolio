@@ -10,9 +10,9 @@ export default function SectionTitle({
     id: string;
 }) {
     return (
-        <div id={id} className="scroll-mt-32">
-            <h2 className="text-3xl font-extrabold tracking-tight">{title}</h2>
+        <>
+            <h2 id={id} className="scroll-mt-32 text-3xl font-extrabold tracking-tight">{title}</h2>
             {subtitle ? <p className="text-sub mt-3 max-w-3xl">{subtitle}</p> : null}
-        </div>
+        </>
     );
 }

@@ -9,10 +9,10 @@ export default function AboutPage() {
     const about = content.about;
 
     return (
-        <div className="admin-page space-y-6">
+        <div className="space-y-6">
             <SectionHeader title="About" description="Update your About section text and highlights." />
 
-            <div className="admin-panel admin-border grid gap-4 rounded-lg border p-4">
+            <div className="admin-panel admin-border grid gap-4 rounded-lg border p-4 lg:gap-3 lg:p-3 2xl:gap-4 2xl:p-4">
                 <FormField label="Title">
                     <input
                         className="admin-input"
@@ -25,7 +25,7 @@ export default function AboutPage() {
 
                 <FormField label="Text">
                     <textarea
-                        className="admin-input admin-textarea-lg h-40"
+                        className="admin-input h-40 lg:h-28 2xl:h-40"
                         value={about.text ?? ""}
                         onChange={(e) =>
                             patch((c) => ({ ...c, about: { ...c.about, text: e.target.value } }))

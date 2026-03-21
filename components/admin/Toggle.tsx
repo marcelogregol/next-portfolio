@@ -28,7 +28,11 @@ export function Toggle({
                     ].join(" ")}
                 />
             </span>
-            {label ? <span className="admin-toggle-label admin-muted text-sm">{label}</span> : null}
+            {label ? (
+                <span className="admin-muted text-sm lg:text-[13px] lg:leading-5 2xl:text-sm">
+                    {label}
+                </span>
+            ) : null}
         </button>
     );
 }

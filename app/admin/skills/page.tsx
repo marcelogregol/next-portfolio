@@ -217,14 +217,14 @@ export default function SkillsPage() {
     }
 
     return (
-        <div className="admin-page space-y-6">
-            <div className="admin-page-header flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div className="space-y-6">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                 <SectionHeader
                     title="Skills"
                     description="Create, edit and publish the skills displayed on the front end."
                 />
                 <button
-                    className="admin-create-button admin-primary-btn h-10 rounded-md px-3 text-sm text-white lg:self-start"
+                    className="admin-primary-btn h-10 rounded-md px-3 text-sm lg:self-start"
                     onClick={openNew}
                 >
                     + New skill
@@ -251,7 +251,7 @@ export default function SkillsPage() {
                                 className="admin-row-divider"
                             >
                                 <td className="p-3 align-top">
-                                    <div className="admin-primary-btn inline-flex rounded-xl border px-3 py-3 text-white">
+                                    <div className="admin-primary-btn inline-flex rounded-xl border px-3 py-3">
                                         {renderSkillIcon(skill.iconKey)}
                                     </div>
                                 </td>
@@ -325,7 +325,7 @@ export default function SkillsPage() {
                 onClose={closeModal}
             >
                 {editing ? (
-                    <div className="admin-skills-modal grid gap-3">
+                    <div className="admin-compact-modal grid gap-3">
                         <div className="grid gap-3 lg:grid-cols-2 lg:items-stretch">
                             <div className="grid gap-3">
                                 <FormField label="Name">
@@ -367,15 +367,14 @@ export default function SkillsPage() {
                                     </FormField>
 
                                     <FormField label="Selected">
-                                        <div className="admin-selected-box admin-selected-field admin-panel-frame flex w-full items-center justify-center">
+                                        <div className="admin-selected-field lg:min-h-[2.35rem]">
                                             {renderSkillIcon(editing.iconKey)}
                                         </div>
                                     </FormField>
                                 </div>
                             </div>
 
-                            <div className="flex h-full flex-col">
-                                <div className="admin-field-label mb-1 text-sm font-medium">Description</div>
+                            <FormField label="Description" className="flex h-full flex-col">
                                 <textarea
                                     className="admin-input h-full min-h-[9.75rem] flex-1 resize-none"
                                     value={editing.description}
@@ -386,50 +385,48 @@ export default function SkillsPage() {
                                         })
                                     }
                                 />
-                            </div>
+                            </FormField>
                         </div>
 
-                        <div className="grid gap-3">
-                            <div className="admin-icon-grid pr-3 grid max-h-64 grid-cols-2 gap-2 overflow-y-auto sm:grid-cols-3 lg:grid-cols-6">
-                                {filteredIcons.map((option) => {
-                                    const selected = editing.iconKey === option.value;
+                        <div className="admin-icon-grid grid max-h-64 grid-cols-2 gap-2 overflow-y-auto pr-3 sm:grid-cols-3 lg:max-h-44 lg:grid-cols-6 lg:gap-[0.45rem] 2xl:max-h-64">
+                            {filteredIcons.map((option) => {
+                                const selected = editing.iconKey === option.value;
 
-                                    return (
-                                        <button
-                                            key={option.value}
-                                            type="button"
-                                            className={`admin-icon-card admin-panel-frame rounded-lg p-2 text-center transition ${selected
-                                                ? "admin-primary-btn text-white"
-                                                : "admin-subpanel admin-icon-hover"
+                                return (
+                                    <button
+                                        key={option.value}
+                                        type="button"
+                                        className={`admin-icon-card admin-panel-frame flex min-h-[5.1rem] flex-col items-center justify-center rounded-lg p-2 text-center transition lg:p-[0.45rem] ${selected
+                                            ? "admin-primary-btn"
+                                            : "admin-subpanel admin-icon-hover"
+                                            }`}
+                                        onClick={() =>
+                                            setEditing({
+                                                ...editing,
+                                                iconKey: option.value,
+                                            })
+                                        }
+                                    >
+                                        <div
+                                            className={`mb-1 inline-flex rounded-lg px-1.5 py-1.5 ${selected
+                                                ? "admin-icon-chip"
+                                                : "admin-primary-btn"
                                                 }`}
-                                            onClick={() =>
-                                                setEditing({
-                                                    ...editing,
-                                                    iconKey: option.value,
-                                                })
-                                            }
                                         >
-                                            <div
-                                                className={`mb-1 inline-flex rounded-lg px-1.5 py-1.5 ${selected
-                                                    ? "admin-icon-chip"
-                                                    : "admin-primary-btn text-white"
-                                                    }`}
-                                            >
-                                                {renderSkillIcon(option.value)}
-                                            </div>
-                                            <div className="admin-subtitle text-[11px] font-medium leading-tight">
-                                                {option.label}
-                                            </div>
-                                        </button>
-                                    );
-                                })}
+                                            {renderSkillIcon(option.value)}
+                                        </div>
+                                        <div className="text-[11px] font-medium leading-tight text-slate-100">
+                                            {option.label}
+                                        </div>
+                                    </button>
+                                );
+                            })}
 
-                                {filteredIcons.length === 0 ? (
-                                    <div className="admin-muted admin-subpanel admin-panel-frame col-span-full rounded-md border-dashed p-4 text-sm">
-                                        No icons found for this search.
-                                    </div>
-                                ) : null}
-                            </div>
+                            {filteredIcons.length === 0 ? (
+                                <div className="admin-muted admin-subpanel admin-panel-frame col-span-full rounded-md border-dashed p-4 text-sm">
+                                    No icons found for this search.
+                                </div>
+                            ) : null}
                         </div>
 
                         <div className="admin-modal-footer flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -450,7 +447,7 @@ export default function SkillsPage() {
                                 </FormField>
 
                                 <div className="grid gap-1">
-                                    <div className="admin-subtitle text-sm font-medium">Active</div>
+                                    <div className="text-sm font-medium text-white lg:text-xs 2xl:text-sm">Active</div>
                                     <Toggle
                                         checked={editing.enabled}
                                         onChange={(value) =>
@@ -462,19 +459,19 @@ export default function SkillsPage() {
                             </div>
 
                             <div className="flex justify-end gap-2">
-                            <button
-                                className="admin-ghost-btn rounded-md px-3 py-2 text-sm"
-                                onClick={closeModal}
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                className="admin-primary-btn rounded-md px-3 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-60"
-                                onClick={() => void saveSkill()}
-                                disabled={persisting}
-                            >
-                                {persisting ? "Saving..." : "Save"}
-                            </button>
+                                <button
+                                    className="admin-ghost-btn rounded-md px-3 py-2 text-sm lg:px-[0.7rem] lg:py-[0.45rem] lg:text-xs 2xl:px-3 2xl:py-2 2xl:text-sm"
+                                    onClick={closeModal}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    className="admin-primary-btn rounded-md px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 lg:px-[0.7rem] lg:py-[0.45rem] lg:text-xs 2xl:px-3 2xl:py-2 2xl:text-sm"
+                                    onClick={() => void saveSkill()}
+                                    disabled={persisting}
+                                >
+                                    {persisting ? "Saving..." : "Save"}
+                                </button>
                             </div>
                         </div>
                     </div>

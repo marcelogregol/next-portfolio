@@ -7,7 +7,7 @@ export default async function Projects() {
 
     return (
         <section className="section-shell section-divider section-surface-projects relative overflow-hidden">
-            <div className="section-backdrop section-backdrop-projects"></div>
+            <div className="section-backdrop section-backdrop-projects" />
             <div className="container-base relative z-10">
                 <SectionTitle id="projects" title="Featured Projects" />
                 <div className="mt-8 grid gap-4 lg:grid-cols-3">
@@ -16,7 +16,7 @@ export default async function Projects() {
                     ))}
                 </div>
             </div>
-            <div className="section-glow"></div>
+            <div className="section-glow" />
         </section>
     );
 }
