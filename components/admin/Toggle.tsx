@@ -17,14 +17,14 @@ export function Toggle({
         >
             <span
                 className={[
-                    "admin-toggle-track h-6 w-10 rounded-full border transition",
-                    checked ? "admin-primary-btn" : "",
+                    "admin-toggle-track relative h-6 w-11 overflow-hidden rounded-full border transition-colors",
+                    checked ? "admin-toggle-track-on" : "admin-toggle-track-off",
                 ].join(" ")}
             >
                 <span
                     className={[
-                        "admin-toggle-thumb block h-5 w-5 translate-y-[1px] rounded-full shadow transition",
-                        checked ? "translate-x-4" : "translate-x-1",
+                        "admin-toggle-thumb absolute top-1/2 block -translate-y-1/2 rounded-full shadow transition-all",
+                        checked ? "left-[1.45rem]" : "left-[0.18rem]",
                     ].join(" ")}
                 />
             </span>

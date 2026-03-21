@@ -325,91 +325,72 @@ export default function SkillsPage() {
                 onClose={closeModal}
             >
                 {editing ? (
-                    <div className="grid gap-3">
-                        <FormField label="Name">
-                            <input
-                                className="admin-input"
-                                value={editing.name}
-                                onChange={(e) =>
-                                    setEditing({ ...editing, name: e.target.value })
-                                }
-                            />
-                        </FormField>
-
-                        <FormField label="Description">
-                            <textarea
-                                className="admin-input admin-textarea-sm h-28"
-                                value={editing.description}
-                                onChange={(e) =>
-                                    setEditing({
-                                        ...editing,
-                                        description: e.target.value,
-                                    })
-                                }
-                            />
-                        </FormField>
-
-                        <div className="grid gap-3 md:grid-cols-2">
-                            <FormField label="Category">
-                                <select
-                                    className="admin-input"
-                                    value={editing.category}
-                                    onChange={(e) =>
-                                        setEditing({
-                                            ...editing,
-                                            category: e.target.value as SkillForm["category"],
-                                        })
-                                    }
-                                >
-                                    <option value="Front-end">Front-end</option>
-                                    <option value="Back-end">Back-end</option>
-                                    <option value="Database">Database</option>
-                                    <option value="Outros">Other</option>
-                                </select>
-                            </FormField>
-
-                            <FormField label="Level">
-                                <select
-                                    className="admin-input"
-                                    value={editing.level}
-                                    onChange={(e) =>
-                                        setEditing({
-                                            ...editing,
-                                            level: e.target.value as SkillForm["level"],
-                                        })
-                                    }
-                                >
-                                    <option value="">No level</option>
-                                    <option value="Iniciante">Beginner</option>
-                                    <option value="Intermediario">Intermediate</option>
-                                    <option value="Avancado">Advanced</option>
-                                </select>
-                            </FormField>
-                        </div>
-
-                        <div className="admin-panel admin-border grid gap-3 rounded-lg border p-4">
-                            <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_140px]">
-                                <FormField label="Search icon">
+                    <div className="admin-skills-modal grid gap-3">
+                        <div className="grid gap-3 lg:grid-cols-2 lg:items-stretch">
+                            <div className="grid gap-3">
+                                <FormField label="Name">
                                     <input
                                         className="admin-input"
-                                        placeholder="Example: react, database, deploy, backend..."
-                                        value={iconSearch}
-                                        onChange={(e) => setIconSearch(e.target.value)}
+                                        value={editing.name}
+                                        onChange={(e) =>
+                                            setEditing({ ...editing, name: e.target.value })
+                                        }
                                     />
                                 </FormField>
 
-                                <div className="grid gap-1">
-                                    <div className="admin-subtitle text-sm font-medium">Selected</div>
-                                    <div className="admin-selected-box admin-subpanel admin-panel-frame flex min-h-11 items-center justify-center rounded-md text-white">
-                                        {renderSkillIcon(editing.iconKey)}
-                                    </div>
-                                    <div className="admin-muted text-xs">
-                                        {getSkillIconLabel(editing.iconKey)}
-                                    </div>
+                                <FormField label="Level">
+                                    <select
+                                        className="admin-input"
+                                        value={editing.level}
+                                        onChange={(e) =>
+                                            setEditing({
+                                                ...editing,
+                                                level: e.target.value as SkillForm["level"],
+                                            })
+                                        }
+                                    >
+                                        <option value="">No level</option>
+                                        <option value="Iniciante">Beginner</option>
+                                        <option value="Intermediario">Intermediate</option>
+                                        <option value="Avancado">Advanced</option>
+                                    </select>
+                                </FormField>
+
+                                <div className="grid gap-3 md:grid-cols-[minmax(0,1.45fr)_minmax(0,0.55fr)] md:items-end">
+                                    <FormField label="Search icon">
+                                        <input
+                                            className="admin-input"
+                                            placeholder="Example: react, database, deploy, backend..."
+                                            value={iconSearch}
+                                            onChange={(e) => setIconSearch(e.target.value)}
+                                        />
+                                    </FormField>
+
+                                    <FormField label="Selected">
+                                        <div className="admin-selected-box admin-selected-field admin-panel-frame flex w-full items-center justify-center">
+                                            {renderSkillIcon(editing.iconKey)}
+                                        </div>
+                                    </FormField>
                                 </div>
                             </div>
 
-                            <div className="admin-icon-grid admin-table-head admin-panel-frame grid max-h-64 grid-cols-2 gap-2 overflow-y-auto rounded-md p-2 md:grid-cols-4">
+                            <div className="flex h-full flex-col">
+                                <div className="admin-field-label mb-1 text-sm font-medium">Description</div>
+                                <textarea
+                                    className="admin-input h-full min-h-[9.75rem] flex-1 resize-none"
+                                    value={editing.description}
+                                    onChange={(e) =>
+                                        setEditing({
+                                            ...editing,
+                                            description: e.target.value,
+                                        })
+                                    }
+                                />
+                            </div>
+                        </div>
+
+                        <div className="grid gap-3">
+                            <div className="admin-icon-grid pr-3 grid max-h-64 grid-cols-2 gap-2 overflow-y-auto sm:grid-cols-3 lg:grid-cols-6">
                                 {filteredIcons.map((option) => {
                                     const selected = editing.iconKey === option.value;
 
@@ -417,7 +398,7 @@ export default function SkillsPage() {
                                         <button
                                             key={option.value}
                                             type="button"
-                                            className={`admin-icon-card admin-panel-frame rounded-lg p-3 text-left transition ${selected
+                                            className={`admin-icon-card admin-panel-frame rounded-lg p-2 text-center transition ${selected
                                                 ? "admin-primary-btn text-white"
                                                 : "admin-subpanel admin-icon-hover"
                                                 }`}
@@ -429,14 +410,14 @@ export default function SkillsPage() {
                                             }
                                         >
                                             <div
-                                                className={`mb-2 inline-flex rounded-lg px-2 py-2 ${selected
+                                                className={`mb-1 inline-flex rounded-lg px-1.5 py-1.5 ${selected
                                                     ? "admin-icon-chip"
                                                     : "admin-primary-btn text-white"
                                                     }`}
                                             >
                                                 {renderSkillIcon(option.value)}
                                             </div>
-                                            <div className="admin-subtitle text-sm font-medium">
+                                            <div className="admin-subtitle text-[11px] font-medium leading-tight">
                                                 {option.label}
                                             </div>
                                         </button>
@@ -451,35 +432,36 @@ export default function SkillsPage() {
                             </div>
                         </div>
 
-                        <div className="grid gap-3 md:grid-cols-2">
-                            <FormField label="Order">
-                                <input
-                                    type="number"
-                                    min={1}
-                                    className="admin-input"
-                                    value={editing.order}
-                                    onChange={(e) =>
-                                        setEditing({
-                                            ...editing,
-                                            order: Number(e.target.value),
-                                        })
-                                    }
-                                />
-                            </FormField>
+                        <div className="admin-modal-footer flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                            <div className="grid gap-3 sm:grid-cols-[110px_auto] sm:items-end">
+                                <FormField label="Order">
+                                    <input
+                                        type="number"
+                                        min={1}
+                                        className="admin-input"
+                                        value={editing.order}
+                                        onChange={(e) =>
+                                            setEditing({
+                                                ...editing,
+                                                order: Number(e.target.value),
+                                            })
+                                        }
+                                    />
+                                </FormField>
 
-                            <div className="grid gap-1">
-                                <div className="admin-subtitle text-sm font-medium">Active</div>
-                                <Toggle
-                                    checked={editing.enabled}
-                                    onChange={(value) =>
-                                        setEditing({ ...editing, enabled: value })
-                                    }
-                                    label={editing.enabled ? "Yes" : "No"}
-                                />
+                                <div className="grid gap-1">
+                                    <div className="admin-subtitle text-sm font-medium">Active</div>
+                                    <Toggle
+                                        checked={editing.enabled}
+                                        onChange={(value) =>
+                                            setEditing({ ...editing, enabled: value })
+                                        }
+                                        label={editing.enabled ? "Yes" : "No"}
+                                    />
+                                </div>
                             </div>
-                        </div>
 
-                        <div className="admin-modal-footer flex justify-end gap-2">
+                            <div className="flex justify-end gap-2">
                             <button
                                 className="admin-ghost-btn rounded-md px-3 py-2 text-sm"
                                 onClick={closeModal}
@@ -493,6 +475,7 @@ export default function SkillsPage() {
                             >
                                 {persisting ? "Saving..." : "Save"}
                             </button>
+                            </div>
                         </div>
                     </div>
                 ) : null}

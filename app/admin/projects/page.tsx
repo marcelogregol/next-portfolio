@@ -374,37 +374,38 @@ export default function ProjectsPage() {
                             </FormField>
                         </div>
 
-                        <div className="grid gap-3 sm:grid-cols-3">
-                            <FormField label="Order">
-                                <input
-                                    type="number"
-                                    min={1}
-                                    className="admin-input"
-                                    value={editing.order}
-                                    onChange={(e) => setEditing({ ...editing, order: Number(e.target.value) })}
-                                />
-                            </FormField>
+                        <div className="admin-modal-footer flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                            <div className="grid gap-3 sm:grid-cols-[110px_auto_auto] sm:items-end">
+                                <FormField label="Order">
+                                    <input
+                                        type="number"
+                                        min={1}
+                                        className="admin-input"
+                                        value={editing.order}
+                                        onChange={(e) => setEditing({ ...editing, order: Number(e.target.value) })}
+                                    />
+                                </FormField>
 
-                            <div className="grid gap-1">
-                                <div className="admin-strong text-sm font-medium">Featured</div>
-                                <Toggle
-                                    checked={editing.featured}
-                                    onChange={(value) => setEditing({ ...editing, featured: value })}
-                                    label={editing.featured ? "Yes" : "No"}
-                                />
+                                <div className="grid gap-1">
+                                    <div className="admin-strong text-sm font-medium">Featured</div>
+                                    <Toggle
+                                        checked={editing.featured}
+                                        onChange={(value) => setEditing({ ...editing, featured: value })}
+                                        label={editing.featured ? "Yes" : "No"}
+                                    />
+                                </div>
+
+                                <div className="grid gap-1">
+                                    <div className="admin-strong text-sm font-medium">Active</div>
+                                    <Toggle
+                                        checked={editing.enabled}
+                                        onChange={(value) => setEditing({ ...editing, enabled: value })}
+                                        label={editing.enabled ? "Yes" : "No"}
+                                    />
+                                </div>
                             </div>
 
-                            <div className="grid gap-1">
-                                <div className="admin-strong text-sm font-medium">Active</div>
-                                <Toggle
-                                    checked={editing.enabled}
-                                    onChange={(value) => setEditing({ ...editing, enabled: value })}
-                                    label={editing.enabled ? "Yes" : "No"}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="admin-modal-footer flex justify-end gap-2">
+                            <div className="flex justify-end gap-2">
                             <button
                                 className="admin-ghost-btn rounded-md px-3 py-2 text-sm"
                                 onClick={closeModal}
@@ -418,6 +419,7 @@ export default function ProjectsPage() {
                             >
                                 {persisting ? "Saving..." : "Save"}
                             </button>
+                            </div>
                         </div>
                     </div>
                 ) : null}
