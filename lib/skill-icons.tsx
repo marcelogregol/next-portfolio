@@ -13,6 +13,7 @@ import {
 } from "react-icons/fa6";
 import {
     SiCss,
+    SiDocker,
     SiExpress,
     SiJavascript,
     SiMongodb,
@@ -43,6 +44,7 @@ export type SkillIconKey =
     | "css3"
     | "figma"
     | "express"
+    | "docker"
     | "vercel"
     | "server"
     | "code"
@@ -157,6 +159,12 @@ const SKILL_ICON_MAP: Record<SkillIconKey, SkillIconDefinition> = {
         component: SiExpress,
         className: "text-white",
         keywords: ["express", "backend", "api", "node"],
+    },
+    docker: {
+        label: "Docker",
+        component: SiDocker,
+        className: "text-sky-400",
+        keywords: ["docker", "container", "containers", "devops", "infra"],
     },
     vercel: {
         label: "Vercel",
