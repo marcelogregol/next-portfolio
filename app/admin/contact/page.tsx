@@ -54,11 +54,11 @@ export default function ContactPage() {
         <div className="admin-page space-y-6">
             <SectionHeader title="Contact" description="Manage links, contact channels and the final CTA." />
 
-            <div className="admin-panel grid gap-4 rounded-lg border bg-white p-4">
+            <div className="admin-panel admin-border grid gap-4 rounded-lg border p-4">
                 <div className="admin-subgrid grid gap-4 md:grid-cols-2">
                     <FormField label="Email">
                         <input
-                            className="w-full rounded-md border px-3 py-2"
+                            className="admin-input"
                             value={contact.email}
                             onChange={(e) =>
                                 patch((c) => ({ ...c, contact: { ...c.contact, email: e.target.value } }))
@@ -68,7 +68,7 @@ export default function ContactPage() {
 
                     <FormField label="WhatsApp">
                         <input
-                            className="w-full rounded-md border px-3 py-2"
+                            className="admin-input"
                             value={contact.whatsapp}
                             onChange={(e) =>
                                 patch((c) => ({ ...c, contact: { ...c.contact, whatsapp: e.target.value } }))
@@ -80,7 +80,7 @@ export default function ContactPage() {
                 <div className="admin-subgrid grid gap-4 md:grid-cols-2">
                     <FormField label="LinkedIn">
                         <input
-                            className="w-full rounded-md border px-3 py-2"
+                            className="admin-input"
                             value={contact.linkedin}
                             onChange={(e) =>
                                 patch((c) => ({ ...c, contact: { ...c.contact, linkedin: e.target.value } }))
@@ -90,7 +90,7 @@ export default function ContactPage() {
 
                     <FormField label="GitHub">
                         <input
-                            className="w-full rounded-md border px-3 py-2"
+                            className="admin-input"
                             value={contact.github}
                             onChange={(e) =>
                                 patch((c) => ({ ...c, contact: { ...c.contact, github: e.target.value } }))
@@ -99,11 +99,11 @@ export default function ContactPage() {
                     </FormField>
                 </div>
 
-                <div className="grid gap-3 rounded-md border p-3">
+                <div className="admin-subpanel admin-panel-frame grid gap-3 rounded-md p-3">
                     <div className="admin-subtitle text-sm font-semibold">Final CTA</div>
                     <FormField label="Title">
                         <input
-                            className="w-full rounded-md border px-3 py-2"
+                            className="admin-input"
                             value={contact.ctaTitle}
                             onChange={(e) =>
                                 patch((c) => ({ ...c, contact: { ...c.contact, ctaTitle: e.target.value } }))
@@ -113,7 +113,7 @@ export default function ContactPage() {
 
                     <FormField label="Subtitle">
                         <input
-                            className="w-full rounded-md border px-3 py-2"
+                            className="admin-input"
                             value={contact.ctaSubtitle}
                             onChange={(e) =>
                                 patch((c) => ({ ...c, contact: { ...c.contact, ctaSubtitle: e.target.value } }))
@@ -124,7 +124,7 @@ export default function ContactPage() {
                     <div className="admin-subgrid grid gap-4 md:grid-cols-2">
                         <FormField label="Button text">
                             <input
-                                className="w-full rounded-md border px-3 py-2"
+                                className="admin-input"
                                 value={contact.ctaButtonText}
                                 onChange={(e) =>
                                     patch((c) => ({
@@ -137,7 +137,7 @@ export default function ContactPage() {
 
                         <FormField label="Button link (href)">
                             <input
-                                className="w-full rounded-md border px-3 py-2"
+                                className="admin-input"
                                 value={contact.ctaButtonHref}
                                 onChange={(e) =>
                                     patch((c) => ({
@@ -152,7 +152,7 @@ export default function ContactPage() {
 
                 <div className="flex justify-end">
                     <button
-                        className="rounded-md bg-slate-900 px-4 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-60"
+                        className="admin-primary-btn rounded-md px-4 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-60"
                         onClick={() => void saveContact()}
                         disabled={saving}
                     >

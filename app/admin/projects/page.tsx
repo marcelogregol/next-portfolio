@@ -207,16 +207,16 @@ export default function ProjectsPage() {
             <div className="admin-page-header flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                 <SectionHeader title="Projects" description="Create, edit and publish the projects shown on the portfolio." />
                 <button
-                    className="admin-create-button h-10 rounded-md bg-slate-900 px-3 text-sm text-white lg:self-start"
+                    className="admin-create-button admin-primary-btn h-10 rounded-md px-3 text-sm text-white lg:self-start"
                     onClick={openNew}
                 >
                     + New project
                 </button>
             </div>
 
-            <div className="overflow-x-auto rounded-lg border bg-white">
+            <div className="admin-table-shell admin-border overflow-x-auto rounded-lg border">
                 <table className="min-w-[760px] w-full text-sm">
-                    <thead className="bg-slate-50 text-left">
+                    <thead className="admin-table-head text-left">
                         <tr>
                             <th className="p-3">Title</th>
                             <th className="p-3">Image</th>
@@ -228,12 +228,12 @@ export default function ProjectsPage() {
                     </thead>
                     <tbody>
                         {projects.map((project) => (
-                            <tr key={project.id} className="border-t">
+                            <tr key={project.id} className="admin-row-divider">
                                 <td className="p-3">
-                                    <div className="font-medium">{project.title}</div>
-                                    <div className="text-xs text-slate-500">{project.shortDesc}</div>
+                                    <div className="admin-strong font-medium">{project.title}</div>
+                                    <div className="admin-muted text-xs">{project.shortDesc}</div>
                                 </td>
-                                <td className="p-3 text-xs text-slate-500">{project.imageUrl}</td>
+                                <td className="admin-muted p-3 text-xs">{project.imageUrl}</td>
                                 <td className="p-3">{String(project.order).padStart(2, "0")}</td>
                                 <td className="p-3">
                                     <Toggle checked={project.featured} onChange={(value) => void toggleFeatured(project.id, value)} />
@@ -243,11 +243,11 @@ export default function ProjectsPage() {
                                 </td>
                                 <td className="p-3 text-right">
                                     <div className="inline-flex gap-2">
-                                        <button className="rounded-md border px-2 py-1" onClick={() => openEdit(project)}>
+                                        <button className="admin-ghost-btn rounded-md px-2 py-1" onClick={() => openEdit(project)}>
                                             Edit
                                         </button>
                                         <button
-                                            className="rounded-md border px-2 py-1 text-red-600"
+                                            className="admin-ghost-btn rounded-md px-2 py-1 text-red-300"
                                             onClick={() => void removeProject(project.id)}
                                         >
                                             Remove
@@ -258,7 +258,7 @@ export default function ProjectsPage() {
                         ))}
                         {projects.length === 0 ? (
                             <tr>
-                                <td className="p-4 text-slate-500" colSpan={6}>
+                                <td className="admin-muted p-4" colSpan={6}>
                                     No projects added yet.
                                 </td>
                             </tr>
@@ -278,7 +278,7 @@ export default function ProjectsPage() {
                             <div className="grid min-w-0 gap-4">
                                 <FormField label="Title">
                                     <input
-                                        className="w-full rounded-md border px-3 py-2"
+                                        className="admin-input"
                                         value={editing.title}
                                         onChange={(e) => setEditing({ ...editing, title: e.target.value })}
                                     />
@@ -286,7 +286,7 @@ export default function ProjectsPage() {
 
                                 <FormField label="Short description (card)">
                                     <input
-                                        className="w-full rounded-md border px-3 py-2"
+                                        className="admin-input"
                                         value={editing.shortDesc}
                                         onChange={(e) => setEditing({ ...editing, shortDesc: e.target.value })}
                                     />
@@ -294,7 +294,7 @@ export default function ProjectsPage() {
 
                                 <FormField label="Long description">
                                     <textarea
-                                        className="admin-textarea-sm h-28 w-full rounded-md border px-3 py-2"
+                                        className="admin-input admin-textarea-sm h-28"
                                         value={editing.longDesc}
                                         onChange={(e) => setEditing({ ...editing, longDesc: e.target.value })}
                                     />
@@ -313,10 +313,10 @@ export default function ProjectsPage() {
                                 label="Project image"
                             >
                                 <div className="grid gap-3">
-                                    <div className="admin-project-image-panel grid min-w-0 gap-3 rounded-lg border border-slate-200 p-3">
+                                    <div className="admin-project-image-panel admin-subpanel admin-border grid min-w-0 gap-3 rounded-lg border p-0">
                                         <button
                                             type="button"
-                                            className="group relative block overflow-hidden rounded-md bg-slate-100 text-left"
+                                            className="group relative block w-full overflow-hidden rounded-lg bg-slate-100 text-left"
                                             onClick={() => imageInputRef.current?.click()}
                                             disabled={uploadingImage}
                                         >
@@ -353,15 +353,11 @@ export default function ProjectsPage() {
                                             }}
                                             disabled={uploadingImage}
                                         />
-
-                                        <div className="text-xs text-slate-500">
-                                            The selected image is saved automatically after upload.
-                                        </div>
                                     </div>
 
                                     <FormField label="Demo URL">
                                         <input
-                                            className="w-full rounded-md border px-3 py-2"
+                                            className="admin-input"
                                             value={editing.demoUrl}
                                             onChange={(e) => setEditing({ ...editing, demoUrl: e.target.value })}
                                         />
@@ -369,7 +365,7 @@ export default function ProjectsPage() {
 
                                     <FormField label="Source code URL">
                                         <input
-                                            className="w-full rounded-md border px-3 py-2"
+                                            className="admin-input"
                                             value={editing.codeUrl}
                                             onChange={(e) => setEditing({ ...editing, codeUrl: e.target.value })}
                                         />
@@ -383,14 +379,14 @@ export default function ProjectsPage() {
                                 <input
                                     type="number"
                                     min={1}
-                                    className="w-full rounded-md border px-3 py-2"
+                                    className="admin-input"
                                     value={editing.order}
                                     onChange={(e) => setEditing({ ...editing, order: Number(e.target.value) })}
                                 />
                             </FormField>
 
                             <div className="grid gap-1">
-                                <div className="text-sm font-medium">Featured</div>
+                                <div className="admin-strong text-sm font-medium">Featured</div>
                                 <Toggle
                                     checked={editing.featured}
                                     onChange={(value) => setEditing({ ...editing, featured: value })}
@@ -399,7 +395,7 @@ export default function ProjectsPage() {
                             </div>
 
                             <div className="grid gap-1">
-                                <div className="text-sm font-medium">Active</div>
+                                <div className="admin-strong text-sm font-medium">Active</div>
                                 <Toggle
                                     checked={editing.enabled}
                                     onChange={(value) => setEditing({ ...editing, enabled: value })}
@@ -408,15 +404,15 @@ export default function ProjectsPage() {
                             </div>
                         </div>
 
-                        <div className="sticky bottom-0 mt-1 flex w-full justify-end gap-2 border-t bg-white pt-3">
+                        <div className="admin-modal-footer flex justify-end gap-2">
                             <button
-                                className="rounded-md border px-3 py-2 text-sm"
+                                className="admin-ghost-btn rounded-md px-3 py-2 text-sm"
                                 onClick={closeModal}
                             >
                                 Cancel
                             </button>
                             <button
-                                className="rounded-md bg-slate-900 px-3 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-60"
+                                className="admin-primary-btn rounded-md px-3 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-60"
                                 onClick={() => void saveProject()}
                                 disabled={persisting}
                             >

@@ -15,10 +15,10 @@ export function Sidebar() {
     const path = usePathname();
 
     return (
-        <aside className="sticky top-0 hidden h-screen w-52 shrink-0 border-r bg-white xl:block">
+        <aside className="admin-sidebar sticky top-0 hidden h-screen w-52 shrink-0 xl:block">
             <div className="px-4 py-4">
-                <div className="text-base font-semibold">MRG Admin</div>
-                <div className="text-xs text-slate-500">Quick editing</div>
+                <div className="admin-brand text-base font-semibold">MRG Admin</div>
+                <div className="text-xs text-slate-400">Quick editing</div>
             </div>
 
             <nav className="px-2">
@@ -29,8 +29,8 @@ export function Sidebar() {
                             key={it.href}
                             href={it.href}
                             className={[
-                                "mb-1 block rounded-md px-3 py-2 text-sm",
-                                active ? "bg-slate-900 text-white" : "text-slate-700 hover:bg-slate-100",
+                                "admin-nav-link mb-1 block rounded-md px-3 py-2 text-sm",
+                                active ? "admin-nav-link-active text-white" : "text-slate-200",
                             ].join(" ")}
                         >
                             {it.label}

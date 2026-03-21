@@ -15,12 +15,12 @@ export default function HeroPage() {
                 description="Edit the opening section of your portfolio."
             />
 
-            <div className="admin-panel grid gap-4 rounded-lg border bg-white p-4">
+            <div className="admin-panel admin-border grid gap-4 rounded-lg border p-4">
                 <div className="grid gap-4 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-start">
                     <div className="grid gap-4">
                         <FormField label="Greeting">
                             <input
-                                className="w-full rounded-md border px-3 py-2"
+                                className="admin-input"
                                 value={hero.greeting}
                                 onChange={(e) =>
                                     patch((prev) => ({
@@ -33,7 +33,7 @@ export default function HeroPage() {
 
                         <FormField label="Main title">
                             <input
-                                className="w-full rounded-md border px-3 py-2"
+                                className="admin-input"
                                 value={hero.title}
                                 onChange={(e) =>
                                     patch((prev) => ({
@@ -47,7 +47,7 @@ export default function HeroPage() {
 
                     <FormField label="Subtitle / short description">
                         <textarea
-                            className="admin-textarea-sm h-28 w-full rounded-md border px-3 py-2 lg:h-full lg:min-h-[7rem]"
+                            className="admin-input admin-textarea-sm h-28 lg:h-full lg:min-h-[7rem]"
                             value={hero.subtitle}
                             onChange={(e) =>
                                 patch((prev) => ({
@@ -60,11 +60,11 @@ export default function HeroPage() {
                 </div>
 
                 <div className="admin-subgrid grid gap-4 md:grid-cols-2 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
-                    <div className="grid gap-3 rounded-md border p-3">
+                    <div className="admin-subpanel admin-panel-frame grid gap-3 rounded-md p-3">
                         <div className="admin-subtitle text-sm font-semibold">CTA 1</div>
                         <FormField label="Text">
                             <input
-                                className="w-full rounded-md border px-3 py-2"
+                                className="admin-input"
                                 value={hero.cta1Text}
                                 onChange={(e) =>
                                     patch((prev) => ({
@@ -76,7 +76,7 @@ export default function HeroPage() {
                         </FormField>
                         <FormField label="Link (href)">
                             <input
-                                className="w-full rounded-md border px-3 py-2"
+                                className="admin-input"
                                 value={hero.cta1Href}
                                 onChange={(e) =>
                                     patch((prev) => ({
@@ -88,11 +88,11 @@ export default function HeroPage() {
                         </FormField>
                     </div>
 
-                    <div className="grid gap-3 rounded-md border p-3">
+                    <div className="admin-subpanel admin-panel-frame grid gap-3 rounded-md p-3">
                         <div className="admin-subtitle text-sm font-semibold">CTA 2</div>
                         <FormField label="Text">
                             <input
-                                className="w-full rounded-md border px-3 py-2"
+                                className="admin-input"
                                 value={hero.cta2Text}
                                 onChange={(e) =>
                                     patch((prev) => ({
@@ -104,7 +104,7 @@ export default function HeroPage() {
                         </FormField>
                         <FormField label="Link (href)">
                             <input
-                                className="w-full rounded-md border px-3 py-2"
+                                className="admin-input"
                                 value={hero.cta2Href}
                                 onChange={(e) =>
                                     patch((prev) => ({

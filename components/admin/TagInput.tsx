@@ -22,13 +22,13 @@ export function TagInput({
     }
 
     return (
-        <div className="rounded-md border p-2">
+        <div className="admin-subpanel admin-panel-frame rounded-md p-2">
             <div className="flex flex-wrap gap-2">
                 {value.map((t) => (
                     <button
                         type="button"
                         key={t}
-                        className="rounded-full bg-slate-100 px-2 py-1 text-xs text-slate-700"
+                        className="admin-ghost-btn rounded-full px-2 py-1 text-xs"
                         onClick={() => onChange(value.filter((x) => x !== t))}
                         title="Remove"
                     >
@@ -39,7 +39,7 @@ export function TagInput({
 
             <div className="mt-2 flex gap-2">
                 <input
-                    className="w-full rounded-md border px-3 py-2 text-sm"
+                    className="admin-input text-sm"
                     value={text}
                     onChange={(e) => setText(e.target.value)}
                     placeholder={placeholder ?? "Type and press Add"}
@@ -52,7 +52,7 @@ export function TagInput({
                 />
                 <button
                     type="button"
-                    className="rounded-md bg-slate-900 px-3 py-2 text-sm text-white"
+                    className="admin-primary-btn rounded-md px-3 py-2 text-sm text-white"
                     onClick={add}
                 >
                     Add

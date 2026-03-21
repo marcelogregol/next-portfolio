@@ -386,7 +386,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
 
     return (
         <ContentContext.Provider value={{ content, patch, saving, notify }}>
-            <div className="admin-shell min-h-screen bg-slate-50 text-slate-900">
+            <div className="admin-shell min-h-screen text-slate-100">
                 <div className="flex">
                     <Sidebar />
                     <div className="min-w-0 flex-1">
@@ -394,9 +394,9 @@ export function AdminShell({ children }: { children: ReactNode }) {
                         <main className="admin-main mx-auto max-w-[72rem] px-4 py-6">
                             {notice ? (
                                 <p
-                                    className={`mb-4 rounded-md border px-3 py-2 text-sm ${notice.type === "success"
-                                        ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                                        : "border-red-200 bg-red-50 text-red-700"
+                                    className={`admin-notice mb-4 rounded-md border px-3 py-2 text-sm ${notice.type === "success"
+                                        ? "admin-notice-success"
+                                        : "admin-notice-error"
                                         }`}
                                 >
                                     {notice.text}

@@ -12,10 +12,10 @@ export default function AboutPage() {
         <div className="admin-page space-y-6">
             <SectionHeader title="About" description="Update your About section text and highlights." />
 
-            <div className="admin-panel grid gap-4 rounded-lg border bg-white p-4">
+            <div className="admin-panel admin-border grid gap-4 rounded-lg border p-4">
                 <FormField label="Title">
                     <input
-                        className="w-full rounded-md border px-3 py-2"
+                        className="admin-input"
                         value={about.title ?? ""}
                         onChange={(e) =>
                             patch((c) => ({ ...c, about: { ...c.about, title: e.target.value } }))
@@ -25,7 +25,7 @@ export default function AboutPage() {
 
                 <FormField label="Text">
                     <textarea
-                        className="admin-textarea-lg h-40 w-full rounded-md border px-3 py-2"
+                        className="admin-input admin-textarea-lg h-40"
                         value={about.text ?? ""}
                         onChange={(e) =>
                             patch((c) => ({ ...c, about: { ...c.about, text: e.target.value } }))

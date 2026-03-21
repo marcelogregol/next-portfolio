@@ -224,16 +224,16 @@ export default function SkillsPage() {
                     description="Create, edit and publish the skills displayed on the front end."
                 />
                 <button
-                    className="admin-create-button h-10 rounded-md bg-slate-900 px-3 text-sm text-white lg:self-start"
+                    className="admin-create-button admin-primary-btn h-10 rounded-md px-3 text-sm text-white lg:self-start"
                     onClick={openNew}
                 >
                     + New skill
                 </button>
             </div>
 
-            <div className="overflow-x-auto rounded-lg border bg-white">
+            <div className="admin-table-shell admin-border overflow-x-auto rounded-lg border">
                 <table className="min-w-[760px] w-full text-sm">
-                    <thead className="bg-slate-50 text-left">
+                    <thead className="admin-table-head text-left">
                         <tr>
                             <th className="p-3">Icon</th>
                             <th className="p-3">Name</th>
@@ -248,16 +248,16 @@ export default function SkillsPage() {
                         {skills.map((skill, index) => (
                             <tr
                                 key={`${skill.id ?? "skill"}-${skill.order}-${index}`}
-                                className="border-t"
+                                className="admin-row-divider"
                             >
                                 <td className="p-3 align-top">
-                                    <div className="inline-flex rounded-xl border bg-slate-950 px-3 py-3 text-white">
+                                    <div className="admin-primary-btn inline-flex rounded-xl border px-3 py-3 text-white">
                                         {renderSkillIcon(skill.iconKey)}
                                     </div>
                                 </td>
                                 <td className="p-3">
-                                    <div className="font-medium">{skill.name}</div>
-                                    <div className="mt-1 text-xs text-slate-500">
+                                    <div className="admin-strong font-medium">{skill.name}</div>
+                                    <div className="admin-muted mt-1 text-xs">
                                         {skill.description || "No description"}
                                     </div>
                                 </td>
@@ -290,14 +290,14 @@ export default function SkillsPage() {
                                     <div className="inline-flex gap-2">
                                         <button
                                             type="button"
-                                            className="rounded-md border px-2 py-1"
+                                            className="admin-ghost-btn rounded-md px-2 py-1"
                                             onClick={() => openEdit(skill)}
                                         >
                                             Edit
                                         </button>
                                         <button
                                             type="button"
-                                            className="rounded-md border px-2 py-1 text-red-600 disabled:cursor-not-allowed disabled:opacity-60"
+                                            className="admin-ghost-btn rounded-md px-2 py-1 text-red-300 disabled:cursor-not-allowed disabled:opacity-60"
                                             onClick={() => void removeSkillAt(index)}
                                             disabled={persisting}
                                         >
@@ -310,7 +310,7 @@ export default function SkillsPage() {
 
                         {skills.length === 0 ? (
                             <tr>
-                                <td className="p-4 text-slate-500" colSpan={7}>
+                                <td className="admin-muted p-4" colSpan={7}>
                                     No skills added yet.
                                 </td>
                             </tr>
@@ -328,7 +328,7 @@ export default function SkillsPage() {
                     <div className="grid gap-3">
                         <FormField label="Name">
                             <input
-                                className="w-full rounded-md border px-3 py-2"
+                                className="admin-input"
                                 value={editing.name}
                                 onChange={(e) =>
                                     setEditing({ ...editing, name: e.target.value })
@@ -338,7 +338,7 @@ export default function SkillsPage() {
 
                         <FormField label="Description">
                             <textarea
-                                className="admin-textarea-sm h-28 w-full rounded-md border px-3 py-2"
+                                className="admin-input admin-textarea-sm h-28"
                                 value={editing.description}
                                 onChange={(e) =>
                                     setEditing({
@@ -352,7 +352,7 @@ export default function SkillsPage() {
                         <div className="grid gap-3 md:grid-cols-2">
                             <FormField label="Category">
                                 <select
-                                    className="w-full rounded-md border px-3 py-2"
+                                    className="admin-input"
                                     value={editing.category}
                                     onChange={(e) =>
                                         setEditing({
@@ -370,7 +370,7 @@ export default function SkillsPage() {
 
                             <FormField label="Level">
                                 <select
-                                    className="w-full rounded-md border px-3 py-2"
+                                    className="admin-input"
                                     value={editing.level}
                                     onChange={(e) =>
                                         setEditing({
@@ -387,11 +387,11 @@ export default function SkillsPage() {
                             </FormField>
                         </div>
 
-                        <div className="admin-panel grid gap-3 rounded-lg border p-4">
+                        <div className="admin-panel admin-border grid gap-3 rounded-lg border p-4">
                             <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_140px]">
                                 <FormField label="Search icon">
                                     <input
-                                        className="w-full rounded-md border px-3 py-2"
+                                        className="admin-input"
                                         placeholder="Example: react, database, deploy, backend..."
                                         value={iconSearch}
                                         onChange={(e) => setIconSearch(e.target.value)}
@@ -400,16 +400,16 @@ export default function SkillsPage() {
 
                                 <div className="grid gap-1">
                                     <div className="admin-subtitle text-sm font-medium">Selected</div>
-                                    <div className="admin-selected-box flex min-h-11 items-center justify-center rounded-md border bg-slate-950 text-white">
+                                    <div className="admin-selected-box admin-subpanel admin-panel-frame flex min-h-11 items-center justify-center rounded-md text-white">
                                         {renderSkillIcon(editing.iconKey)}
                                     </div>
-                                    <div className="text-xs text-slate-500">
+                                    <div className="admin-muted text-xs">
                                         {getSkillIconLabel(editing.iconKey)}
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="admin-icon-grid grid max-h-64 grid-cols-2 gap-2 overflow-y-auto rounded-md border bg-slate-50 p-2 md:grid-cols-4">
+                            <div className="admin-icon-grid admin-table-head admin-panel-frame grid max-h-64 grid-cols-2 gap-2 overflow-y-auto rounded-md p-2 md:grid-cols-4">
                                 {filteredIcons.map((option) => {
                                     const selected = editing.iconKey === option.value;
 
@@ -417,9 +417,9 @@ export default function SkillsPage() {
                                         <button
                                             key={option.value}
                                             type="button"
-                                            className={`admin-icon-card rounded-lg border p-3 text-left transition ${selected
-                                                ? "border-slate-900 bg-slate-900 text-white"
-                                                : "bg-white hover:border-slate-400 hover:bg-slate-100"
+                                            className={`admin-icon-card admin-panel-frame rounded-lg p-3 text-left transition ${selected
+                                                ? "admin-primary-btn text-white"
+                                                : "admin-subpanel admin-icon-hover"
                                                 }`}
                                             onClick={() =>
                                                 setEditing({
@@ -430,8 +430,8 @@ export default function SkillsPage() {
                                         >
                                             <div
                                                 className={`mb-2 inline-flex rounded-lg px-2 py-2 ${selected
-                                                    ? "bg-white/10"
-                                                    : "bg-slate-950 text-white"
+                                                    ? "admin-icon-chip"
+                                                    : "admin-primary-btn text-white"
                                                     }`}
                                             >
                                                 {renderSkillIcon(option.value)}
@@ -444,7 +444,7 @@ export default function SkillsPage() {
                                 })}
 
                                 {filteredIcons.length === 0 ? (
-                                    <div className="col-span-full rounded-md border border-dashed bg-white p-4 text-sm text-slate-500">
+                                    <div className="admin-muted admin-subpanel admin-panel-frame col-span-full rounded-md border-dashed p-4 text-sm">
                                         No icons found for this search.
                                     </div>
                                 ) : null}
@@ -456,7 +456,7 @@ export default function SkillsPage() {
                                 <input
                                     type="number"
                                     min={1}
-                                    className="w-full rounded-md border px-3 py-2"
+                                    className="admin-input"
                                     value={editing.order}
                                     onChange={(e) =>
                                         setEditing({
@@ -479,15 +479,15 @@ export default function SkillsPage() {
                             </div>
                         </div>
 
-                        <div className="sticky bottom-0 -mx-4 mt-1 flex justify-end gap-2 border-t bg-white px-4 pt-3">
+                        <div className="admin-modal-footer flex justify-end gap-2">
                             <button
-                                className="rounded-md border px-3 py-2 text-sm"
+                                className="admin-ghost-btn rounded-md px-3 py-2 text-sm"
                                 onClick={closeModal}
                             >
                                 Cancel
                             </button>
                             <button
-                                className="rounded-md bg-slate-900 px-3 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-60"
+                                className="admin-primary-btn rounded-md px-3 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-60"
                                 onClick={() => void saveSkill()}
                                 disabled={persisting}
                             >
