@@ -1,10 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { AdminPageSection } from "@/components/admin/AdminPageSection";
 import { SkillsModal, type SkillForm } from "@/components/admin/SkillsModal";
-import { SectionHeader } from "@/components/admin/SectionHeader";
 import { Toggle } from "@/components/admin/Toggle";
 import { useContent } from "@/components/admin/AdminShell";
+import { saveSkills } from "@/lib/admin/api";
+import { mapSkillsResponse } from "@/lib/admin/mappers";
 import { renderSkillIcon, type SkillIconKey } from "@/lib/skill-icons";
 
 function normalizeOrders(skills: SkillForm[]) {
@@ -90,47 +92,11 @@ export default function SkillsPage() {
                 id: typeof skill.id === "number" ? skill.id : undefined,
             }));
 
-            const response = await fetch("/api/skills", {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload),
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to save skills");
-            }
-
-            const savedSkills = await response.json();
+            const savedSkills = await saveSkills(payload);
 
             patch((current) => ({
                 ...current,
-                skills: Array.isArray(savedSkills)
-                    ? savedSkills.map((skill, index) => ({
-                        id: typeof skill?.id === "number" ? skill.id : undefined,
-                        name: skill?.name ?? "",
-                        description: skill?.description ?? "",
-                        category:
-                            skill?.category === "Front-end" ||
-                                skill?.category === "Back-end" ||
-                                skill?.category === "Database" ||
-                                skill?.category === "Outros"
-                                ? skill.category
-                                : "Outros",
-                        level:
-                            skill?.level === "Iniciante" ||
-                                skill?.level === "Intermediario" ||
-                                skill?.level === "Avancado" ||
-                                skill?.level === ""
-                                ? skill.level
-                                : "",
-                        iconKey:
-                            typeof skill?.iconKey === "string"
-                                ? (skill.iconKey as SkillIconKey)
-                                : "gear",
-                        enabled: Boolean(skill?.enabled),
-                        order: Number(skill?.order ?? index + 1),
-                    }))
-                    : current.skills,
+                skills: mapSkillsResponse(savedSkills),
             }));
 
             return true;
@@ -195,19 +161,18 @@ export default function SkillsPage() {
     }
 
     return (
-        <div className="space-y-6">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-                <SectionHeader
-                    title="Skills"
-                    description="Create, edit and publish the skills displayed on the front end."
-                />
+        <AdminPageSection
+            title="Skills"
+            description="Create, edit and publish the skills displayed on the front end."
+            actions={
                 <button
                     className="admin-primary-btn h-10 rounded-md px-3 text-sm lg:self-start"
                     onClick={openNew}
                 >
                     + New skill
                 </button>
-            </div>
+            }
+        >
 
             <div className="admin-table-shell admin-border overflow-x-auto rounded-lg border">
                 <table className="min-w-[760px] w-full text-sm">
@@ -307,6 +272,6 @@ export default function SkillsPage() {
                 onChange={setEditing}
                 onIconSearchChange={setIconSearch}
             />
-        </div>
+        </AdminPageSection>
     );
 }

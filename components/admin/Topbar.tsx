@@ -5,8 +5,10 @@ import { Toolbar } from "./Toolbar";
 
 export function Topbar({
     onPublish,
+    saving,
 }: {
     onPublish: () => void;
+    saving: boolean;
 }) {
     return (
         <header className="admin-topbar sticky top-0 z-10">
@@ -26,7 +28,7 @@ export function Topbar({
                     </a>
                 </div>
 
-                <Toolbar onPublish={onPublish} />
+                <Toolbar onPublish={onPublish} saving={saving} />
             </div>
         </header>
     );

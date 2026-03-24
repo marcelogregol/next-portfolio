@@ -1,7 +1,8 @@
 "use client";
 
-import { SectionHeader } from "@/components/admin/SectionHeader";
+import { AdminPageSection } from "@/components/admin/AdminPageSection";
 import { FormField } from "@/components/admin/FormField";
+import { HeroCtaCard } from "@/components/admin/HeroCtaCard";
 import { useContent } from "@/components/admin/AdminShell";
 
 export default function HeroPage() {
@@ -9,12 +10,10 @@ export default function HeroPage() {
 
     const hero = content.hero;
     return (
-        <div className="space-y-6">
-            <SectionHeader
-                title="Hero"
-                description="Edit the opening section of your portfolio."
-            />
-
+        <AdminPageSection
+            title="Hero"
+            description="Edit the opening section of your portfolio."
+        >
             <div className="admin-panel admin-border grid gap-4 rounded-lg border p-4 lg:gap-3 lg:p-3 2xl:gap-4 2xl:p-4">
                 <div className="grid gap-4 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-start">
                     <div className="grid gap-4">
@@ -60,63 +59,43 @@ export default function HeroPage() {
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
-                    <div className="admin-subpanel admin-panel-frame grid gap-3 rounded-md p-3">
-                        <div className="text-sm font-semibold text-white lg:text-xs 2xl:text-sm">CTA 1</div>
-                        <FormField label="Text">
-                            <input
-                                className="admin-input"
-                                value={hero.cta1Text}
-                                onChange={(e) =>
-                                    patch((prev) => ({
-                                        ...prev,
-                                        hero: { ...prev.hero, cta1Text: e.target.value },
-                                    }))
-                                }
-                            />
-                        </FormField>
-                        <FormField label="Link (href)">
-                            <input
-                                className="admin-input"
-                                value={hero.cta1Href}
-                                onChange={(e) =>
-                                    patch((prev) => ({
-                                        ...prev,
-                                        hero: { ...prev.hero, cta1Href: e.target.value },
-                                    }))
-                                }
-                            />
-                        </FormField>
-                    </div>
+                    <HeroCtaCard
+                        title="CTA 1"
+                        text={hero.cta1Text}
+                        href={hero.cta1Href}
+                        onTextChange={(value) =>
+                            patch((prev) => ({
+                                ...prev,
+                                hero: { ...prev.hero, cta1Text: value },
+                            }))
+                        }
+                        onHrefChange={(value) =>
+                            patch((prev) => ({
+                                ...prev,
+                                hero: { ...prev.hero, cta1Href: value },
+                            }))
+                        }
+                    />
 
-                    <div className="admin-subpanel admin-panel-frame grid gap-3 rounded-md p-3">
-                        <div className="text-sm font-semibold text-white lg:text-xs 2xl:text-sm">CTA 2</div>
-                        <FormField label="Text">
-                            <input
-                                className="admin-input"
-                                value={hero.cta2Text}
-                                onChange={(e) =>
-                                    patch((prev) => ({
-                                        ...prev,
-                                        hero: { ...prev.hero, cta2Text: e.target.value },
-                                    }))
-                                }
-                            />
-                        </FormField>
-                        <FormField label="Link (href)">
-                            <input
-                                className="admin-input"
-                                value={hero.cta2Href}
-                                onChange={(e) =>
-                                    patch((prev) => ({
-                                        ...prev,
-                                        hero: { ...prev.hero, cta2Href: e.target.value },
-                                    }))
-                                }
-                            />
-                        </FormField>
-                    </div>
+                    <HeroCtaCard
+                        title="CTA 2"
+                        text={hero.cta2Text}
+                        href={hero.cta2Href}
+                        onTextChange={(value) =>
+                            patch((prev) => ({
+                                ...prev,
+                                hero: { ...prev.hero, cta2Text: value },
+                            }))
+                        }
+                        onHrefChange={(value) =>
+                            patch((prev) => ({
+                                ...prev,
+                                hero: { ...prev.hero, cta2Href: value },
+                            }))
+                        }
+                    />
                 </div>
             </div>
-        </div>
+        </AdminPageSection>
     );
 }

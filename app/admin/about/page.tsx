@@ -1,6 +1,6 @@
 "use client";
 
-import { SectionHeader } from "@/components/admin/SectionHeader";
+import { AdminPageSection } from "@/components/admin/AdminPageSection";
 import { FormField } from "@/components/admin/FormField";
 import { useContent } from "@/components/admin/AdminShell";
 
@@ -9,9 +9,10 @@ export default function AboutPage() {
     const about = content.about;
 
     return (
-        <div className="space-y-6">
-            <SectionHeader title="About" description="Update your About section text and highlights." />
-
+        <AdminPageSection
+            title="About"
+            description="Update your About section text and highlights."
+        >
             <div className="admin-panel admin-border grid gap-4 rounded-lg border p-4 lg:gap-3 lg:p-3 2xl:gap-4 2xl:p-4">
                 <FormField label="Title">
                     <input
@@ -33,6 +34,6 @@ export default function AboutPage() {
                     />
                 </FormField>
             </div>
-        </div>
+        </AdminPageSection>
     );
 }

@@ -2,8 +2,10 @@
 
 export function Toolbar({
     onPublish,
+    saving,
 }: {
     onPublish: () => void;
+    saving: boolean;
 }) {
     async function handleLogout() {
         await fetch("/api/admin/logout", { method: "POST" });
@@ -19,10 +21,11 @@ export function Toolbar({
                 Sign out
             </button>
             <button
-                className="admin-primary-btn rounded-md px-3 py-2 text-sm lg:py-[0.45rem] lg:text-xs 2xl:text-sm"
+                className="admin-primary-btn rounded-md px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 lg:py-[0.45rem] lg:text-xs 2xl:text-sm"
                 onClick={onPublish}
+                disabled={saving}
             >
-                Publish
+                {saving ? "Publishing..." : "Publish"}
             </button>
         </div>
     );

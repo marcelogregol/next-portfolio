@@ -1,8 +1,11 @@
 "use client";
 
-import { SectionHeader } from "@/components/admin/SectionHeader";
+import { AdminPageSection } from "@/components/admin/AdminPageSection";
+import { ContactCtaCard } from "@/components/admin/ContactCtaCard";
 import { FormField } from "@/components/admin/FormField";
 import { useContent } from "@/components/admin/AdminShell";
+import { saveContact as saveContactRequest } from "@/lib/admin/api";
+import { mapContactResponse } from "@/lib/admin/mappers";
 import { useState } from "react";
 
 export default function ContactPage() {
@@ -14,31 +17,11 @@ export default function ContactPage() {
         try {
             setSaving(true);
 
-            const response = await fetch("/api/contact", {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(contact),
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to save contact");
-            }
-
-            const savedContact = await response.json();
+            const savedContact = await saveContactRequest(contact);
 
             patch((current) => ({
                 ...current,
-                contact: {
-                    id: typeof savedContact?.id === "number" ? savedContact.id : undefined,
-                    email: savedContact?.email ?? "",
-                    whatsapp: savedContact?.whatsapp ?? "",
-                    linkedin: savedContact?.linkedin ?? "",
-                    github: savedContact?.github ?? "",
-                    ctaTitle: savedContact?.ctaTitle ?? "",
-                    ctaSubtitle: savedContact?.ctaSubtitle ?? "",
-                    ctaButtonText: savedContact?.ctaButtonText ?? "",
-                    ctaButtonHref: savedContact?.ctaButtonHref ?? "",
-                },
+                contact: mapContactResponse(savedContact),
             }));
 
             notify({ type: "success", text: "Contact details saved successfully." });
@@ -51,9 +34,10 @@ export default function ContactPage() {
     }
 
     return (
-        <div className="space-y-6">
-            <SectionHeader title="Contact" description="Manage links, contact channels and the final CTA." />
-
+        <AdminPageSection
+            title="Contact"
+            description="Manage links, contact channels and the final CTA."
+        >
             <div className="admin-panel admin-border grid gap-4 rounded-lg border p-4 lg:gap-3 lg:p-3 2xl:gap-4 2xl:p-4">
                 <div className="grid gap-4 md:grid-cols-2">
                     <FormField label="Email">
@@ -99,56 +83,12 @@ export default function ContactPage() {
                     </FormField>
                 </div>
 
-                <div className="admin-subpanel admin-panel-frame grid gap-3 rounded-md p-3">
-                    <div className="text-sm font-semibold text-white lg:text-xs 2xl:text-sm">Final CTA</div>
-                    <FormField label="Title">
-                        <input
-                            className="admin-input"
-                            value={contact.ctaTitle}
-                            onChange={(e) =>
-                                patch((c) => ({ ...c, contact: { ...c.contact, ctaTitle: e.target.value } }))
-                            }
-                        />
-                    </FormField>
-
-                    <FormField label="Subtitle">
-                        <input
-                            className="admin-input"
-                            value={contact.ctaSubtitle}
-                            onChange={(e) =>
-                                patch((c) => ({ ...c, contact: { ...c.contact, ctaSubtitle: e.target.value } }))
-                            }
-                        />
-                    </FormField>
-
-                    <div className="grid gap-4 md:grid-cols-2">
-                        <FormField label="Button text">
-                            <input
-                                className="admin-input"
-                                value={contact.ctaButtonText}
-                                onChange={(e) =>
-                                    patch((c) => ({
-                                        ...c,
-                                        contact: { ...c.contact, ctaButtonText: e.target.value },
-                                    }))
-                                }
-                            />
-                        </FormField>
-
-                        <FormField label="Button link (href)">
-                            <input
-                                className="admin-input"
-                                value={contact.ctaButtonHref}
-                                onChange={(e) =>
-                                    patch((c) => ({
-                                        ...c,
-                                        contact: { ...c.contact, ctaButtonHref: e.target.value },
-                                    }))
-                                }
-                            />
-                        </FormField>
-                    </div>
-                </div>
+                <ContactCtaCard
+                    contact={contact}
+                    onChange={(nextContact) =>
+                        patch((c) => ({ ...c, contact: nextContact }))
+                    }
+                />
 
                 <div className="flex justify-end">
                     <button
@@ -160,6 +100,6 @@ export default function ContactPage() {
                     </button>
                 </div>
             </div>
-        </div>
+        </AdminPageSection>
     );
 }

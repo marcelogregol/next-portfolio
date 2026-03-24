@@ -1,9 +1,11 @@
 "use client";
 import { useMemo, useRef, useState } from "react";
+import { AdminPageSection } from "@/components/admin/AdminPageSection";
 import { ProjectsModal, type ProjectForm } from "@/components/admin/ProjectsModal";
-import { SectionHeader } from "@/components/admin/SectionHeader";
 import { Toggle } from "@/components/admin/Toggle";
 import { useContent } from "@/components/admin/AdminShell";
+import { saveProjects, uploadProjectImage as uploadProjectImageRequest } from "@/lib/admin/api";
+import { mapProjectsResponse } from "@/lib/admin/mappers";
 
 export default function ProjectsPage() {
     const { content, patch, notify } = useContent();
@@ -50,17 +52,9 @@ export default function ProjectsPage() {
         try {
             setUploadingImage(true);
 
-            const formData = new FormData();
-            formData.append("file", file);
+            const data = await uploadProjectImageRequest(file);
 
-            const response = await fetch("/api/projects/upload", {
-                method: "POST",
-                body: formData,
-            });
-
-            const data = await response.json().catch(() => null);
-
-            if (!response.ok || typeof data?.url !== "string") {
+            if (typeof data?.url !== "string") {
                 throw new Error(
                     typeof data?.error === "string"
                         ? data.error
@@ -85,35 +79,11 @@ export default function ProjectsPage() {
         try {
             setPersisting(true);
 
-            const response = await fetch("/api/projects", {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(nextProjects),
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to save projects");
-            }
-
-            const savedProjects = await response.json();
+            const savedProjects = await saveProjects(nextProjects);
 
             patch((current) => ({
                 ...current,
-                projects: Array.isArray(savedProjects)
-                    ? savedProjects.map((project, index) => ({
-                        id: typeof project?.id === "number" ? project.id : undefined,
-                        title: project?.title ?? "",
-                        shortDesc: project?.shortDesc ?? "",
-                        longDesc: project?.longDesc ?? "",
-                        tags: Array.isArray(project?.tags) ? project.tags : [],
-                        imageUrl: project?.imageUrl ?? "/images/demo.jpg",
-                        demoUrl: project?.demoUrl ?? "",
-                        codeUrl: project?.codeUrl ?? "",
-                        featured: Boolean(project?.featured),
-                        enabled: Boolean(project?.enabled),
-                        order: Number(project?.order ?? index + 1),
-                    }))
-                    : current.projects,
+                projects: mapProjectsResponse(savedProjects),
             }));
 
             return true;
@@ -187,16 +157,19 @@ export default function ProjectsPage() {
     }
 
     return (
-        <div className="space-y-5">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-                <SectionHeader title="Projects" description="Create, edit and publish the projects shown on the portfolio." />
+        <AdminPageSection
+            title="Projects"
+            description="Create, edit and publish the projects shown on the portfolio."
+            actions={
                 <button
                     className="admin-primary-btn h-10 rounded-md px-3 text-sm lg:self-start"
                     onClick={openNew}
                 >
                     + New project
                 </button>
-            </div>
+            }
+            spacingClassName="space-y-5"
+        >
 
             <div className="admin-table-shell admin-border overflow-x-auto rounded-lg border">
                 <table className="min-w-[760px] w-full text-sm">
@@ -262,6 +235,6 @@ export default function ProjectsPage() {
                 onChange={setEditing}
                 onUploadImage={uploadProjectImage}
             />
-        </div>
+        </AdminPageSection>
     );
 }
