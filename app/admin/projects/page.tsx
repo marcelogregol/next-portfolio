@@ -1,25 +1,9 @@
 "use client";
 import { useMemo, useRef, useState } from "react";
+import { ProjectsModal, type ProjectForm } from "@/components/admin/ProjectsModal";
 import { SectionHeader } from "@/components/admin/SectionHeader";
-import { FormField } from "@/components/admin/FormField";
 import { Toggle } from "@/components/admin/Toggle";
-import { Modal } from "@/components/admin/Modal";
-import { TagInput } from "@/components/admin/TagInput";
 import { useContent } from "@/components/admin/AdminShell";
-
-type ProjectForm = {
-    id?: number | null;
-    title: string;
-    shortDesc: string;
-    longDesc: string;
-    tags: string[];
-    imageUrl: string;
-    demoUrl: string;
-    codeUrl: string;
-    featured: boolean;
-    enabled: boolean;
-    order: number;
-};
 
 export default function ProjectsPage() {
     const { content, patch, notify } = useContent();
@@ -267,163 +251,17 @@ export default function ProjectsPage() {
                 </table>
             </div>
 
-            <Modal
-                title={editing?.title ? `Edit: ${editing.title}` : "New project"}
+            <ProjectsModal
                 open={open}
+                editing={editing}
+                persisting={persisting}
+                uploadingImage={uploadingImage}
+                imageInputRef={imageInputRef}
                 onClose={closeModal}
-            >
-                {editing ? (
-                    <div className="admin-compact-modal grid gap-4 pb-1 lg:gap-3">
-                        <div className="grid gap-4 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-3">
-                            <div className="grid min-w-0 gap-4 lg:gap-3">
-                                <FormField label="Title">
-                                    <input
-                                        className="admin-input"
-                                        value={editing.title}
-                                        onChange={(e) => setEditing({ ...editing, title: e.target.value })}
-                                    />
-                                </FormField>
-
-                                <FormField label="Short description (card)">
-                                    <input
-                                        className="admin-input"
-                                        value={editing.shortDesc}
-                                        onChange={(e) => setEditing({ ...editing, shortDesc: e.target.value })}
-                                    />
-                                </FormField>
-
-                                <FormField label="Long description">
-                                    <textarea
-                                        className="admin-input h-28 lg:h-[5.5rem] 2xl:h-28"
-                                        value={editing.longDesc}
-                                        onChange={(e) => setEditing({ ...editing, longDesc: e.target.value })}
-                                    />
-                                </FormField>
-
-                                <FormField label="Tags (stack)">
-                                    <TagInput
-                                        value={editing.tags}
-                                        onChange={(tags) => setEditing({ ...editing, tags })}
-                                        placeholder="Example: React"
-                                    />
-                                </FormField>
-                            </div>
-
-                            <FormField
-                                label="Project image"
-                            >
-                                <div className="grid gap-3 lg:gap-2.5">
-                                    <div className="admin-subpanel admin-border grid min-w-0 gap-3 rounded-lg border p-0 lg:gap-2.5">
-                                        <button
-                                            type="button"
-                                            className="group relative block w-full overflow-hidden rounded-lg bg-slate-100 text-left"
-                                            onClick={() => imageInputRef.current?.click()}
-                                            disabled={uploadingImage}
-                                        >
-                                            <img
-                                                src={editing.imageUrl || "/images/demo.jpg"}
-                                                alt={editing.title || "Project preview"}
-                                                className="h-40 w-full object-cover lg:h-[6.25rem] 2xl:h-40"
-                                                loading="lazy"
-                                                onError={(e) => {
-                                                    if (e.currentTarget.src.endsWith("/images/demo.jpg")) {
-                                                        return;
-                                                    }
-
-                                                    e.currentTarget.src = "/images/demo.jpg";
-                                                }}
-                                            />
-                                            <span className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/80 to-transparent px-3 py-3 text-xs font-medium text-white lg:py-2 lg:text-[11px] 2xl:py-3 2xl:text-xs">
-                                                {uploadingImage ? "Uploading image..." : "Click to upload image"}
-                                            </span>
-                                        </button>
-
-                                        <input
-                                            ref={imageInputRef}
-                                            type="file"
-                                            accept="image/png,image/jpeg,image/webp,image/gif"
-                                            className="hidden"
-                                            onChange={(e) => {
-                                                const file = e.target.files?.[0];
-
-                                                if (file) {
-                                                    void uploadProjectImage(file);
-                                                    e.currentTarget.value = "";
-                                                }
-                                            }}
-                                            disabled={uploadingImage}
-                                        />
-                                    </div>
-
-                                    <FormField label="Demo URL">
-                                        <input
-                                            className="admin-input"
-                                            value={editing.demoUrl}
-                                            onChange={(e) => setEditing({ ...editing, demoUrl: e.target.value })}
-                                        />
-                                    </FormField>
-
-                                    <FormField label="Source code URL">
-                                        <input
-                                            className="admin-input"
-                                            value={editing.codeUrl}
-                                            onChange={(e) => setEditing({ ...editing, codeUrl: e.target.value })}
-                                        />
-                                    </FormField>
-                                </div>
-                            </FormField>
-                        </div>
-
-                        <div className="admin-modal-footer flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between lg:gap-2.5">
-                            <div className="grid gap-3 sm:grid-cols-[110px_auto_auto] sm:items-end">
-                                <FormField label="Order">
-                                    <input
-                                        type="number"
-                                        min={1}
-                                        className="admin-input"
-                                        value={editing.order}
-                                        onChange={(e) => setEditing({ ...editing, order: Number(e.target.value) })}
-                                    />
-                                </FormField>
-
-                                <div className="grid gap-1">
-                                    <div className="admin-strong text-sm font-medium lg:text-xs 2xl:text-sm">Featured</div>
-                                    <Toggle
-                                        checked={editing.featured}
-                                        onChange={(value) => setEditing({ ...editing, featured: value })}
-                                        label={editing.featured ? "Yes" : "No"}
-                                    />
-                                </div>
-
-                                <div className="grid gap-1">
-                                    <div className="admin-strong text-sm font-medium lg:text-xs 2xl:text-sm">Active</div>
-                                    <Toggle
-                                        checked={editing.enabled}
-                                        onChange={(value) => setEditing({ ...editing, enabled: value })}
-                                        label={editing.enabled ? "Yes" : "No"}
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="flex justify-end gap-2">
-                                <button
-                                    className="admin-ghost-btn rounded-md px-3 py-2 text-sm lg:px-[0.7rem] lg:py-[0.45rem] lg:text-xs 2xl:px-3 2xl:py-2 2xl:text-sm"
-                                    onClick={closeModal}
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    className="admin-primary-btn rounded-md px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 lg:px-[0.7rem] lg:py-[0.45rem] lg:text-xs 2xl:px-3 2xl:py-2 2xl:text-sm"
-                                    onClick={() => void saveProject()}
-                                    disabled={persisting}
-                                >
-                                    {persisting ? "Saving..." : "Save"}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                ) : null}
-            </Modal>
+                onSave={saveProject}
+                onChange={setEditing}
+                onUploadImage={uploadProjectImage}
+            />
         </div>
     );
 }
