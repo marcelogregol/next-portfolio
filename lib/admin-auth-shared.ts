@@ -9,11 +9,11 @@ export function getSessionSalt() {
 }
 
 export function isValidAdminPassword(password: string) {
-    return password === getAdminPassword();
+    return password.trim() === getAdminPassword().trim();
 }
 
 export function getAdminSessionToken() {
-    return encodeURIComponent(`${getAdminPassword()}:${getSessionSalt()}`);
+    return Buffer.from(`${getAdminPassword()}:${getSessionSalt()}`).toString("base64url");
 }
 
 export function getAdminSessionCookieConfig() {

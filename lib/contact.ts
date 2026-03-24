@@ -14,12 +14,12 @@ export type ContactContent = {
 
 export const defaultContact: ContactContent = {
     id: null,
-    email: "marcelo.dev@email.com",
-    whatsapp: "5514999999999",
-    linkedin: "https://linkedin.com/in/your-profile",
-    github: "https://github.com/your-user",
+    email: "",
+    whatsapp: "",
+    linkedin: "",
+    github: "",
     ctaTitle: "Let's work together",
-    ctaSubtitle: "Available for professional opportunities across Ireland, whether on-site, hybrid or remote.",
+    ctaSubtitle: "Available for professional opportunities.",
     ctaButtonText: "Get in Touch",
     ctaButtonHref: "#contact",
 };

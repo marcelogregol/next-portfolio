@@ -13,10 +13,10 @@ export type HeroContent = {
 
 export const defaultHero: HeroContent = {
     id: null,
-    greeting: "Hello, I'm Marcelo",
+    greeting: "Portfolio",
     title: "Full-Stack Developer",
     subtitle:
-        "I build modern web applications with a strong focus on performance, usability and clean architecture.",
+        "Modern web applications with a strong focus on performance, usability and clean architecture.",
     cta1Text: "View Projects",
     cta1Href: "#projects",
     cta2Text: "Get in Touch",

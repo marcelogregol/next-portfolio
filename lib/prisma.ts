@@ -1,13 +1,10 @@
 import { PrismaClient } from "../generated/prisma";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
+import { getDatabaseUrl } from "./database-url";
 
 const globalForPrisma = globalThis as unknown as {
     prisma: PrismaClient | undefined;
 };
-
-function getDatabaseUrl() {
-    return process.env.DATABASE_URL ?? "mariadb://root:@localhost:3306/portifolio";
-}
 
 export const prisma =
     globalForPrisma.prisma ??

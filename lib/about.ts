@@ -12,8 +12,8 @@ export type AboutContent = {
 
 export const defaultAbout: AboutContent = {
     id: null,
-    title: "About Me",
-    text: "Full-stack developer with hands-on experience building modern, scalable applications. I work across front-end, back-end and databases to deliver complete digital products.",
+    title: "About",
+    text: "Full-stack development focused on modern, scalable applications across front-end, back-end and databases.",
     highlights: [
         { id: 1, title: "Architecture" },
         { id: 2, title: "Performance" },
