@@ -121,7 +121,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
                 <div className="flex">
                     <Sidebar />
                     <div className="flex-1">
-                        <Topbar onPublish={publish} />
+                        <Topbar onPublish={publish} saving={saving} />
                         <main className="mx-auto max-w-5xl px-4 py-6">{children}</main>
                     </div>
                 </div>
