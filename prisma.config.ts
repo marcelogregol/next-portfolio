@@ -2,7 +2,12 @@
 // npm install --save-dev prisma dotenv
 import "dotenv/config";
 import { defineConfig } from "prisma/config";
-import { getDatabaseUrl } from "./lib/database-url";
+
+const prismaBuildDatabaseUrl =
+  process.env.DATABASE_URL_ONLINE?.trim() ||
+  process.env.DATABASE_URL_LOCAL?.trim() ||
+  process.env.DATABASE_URL?.trim() ||
+  "mysql://placeholder:placeholder@localhost:3306/placeholder";
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
@@ -10,6 +15,6 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: getDatabaseUrl(),
+    url: prismaBuildDatabaseUrl,
   },
 });
