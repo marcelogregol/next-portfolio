@@ -1,7 +1,12 @@
 export const ADMIN_SESSION_COOKIE = "mrg_admin_session";
 
+export function resolveRequestHost(forwardedHost?: string | null, host?: string | null) {
+    const preferredHost = forwardedHost?.split(",")[0]?.trim() || host || "";
+    return preferredHost.toLowerCase().split(":")[0];
+}
+
 function normalizeHost(host?: string | null) {
-    return (host || "").toLowerCase().split(":")[0];
+    return resolveRequestHost(null, host);
 }
 
 export function getAdminPassword(host?: string | null) {

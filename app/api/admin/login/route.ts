@@ -1,11 +1,14 @@
-import { getAdminSessionCookieConfig, isValidAdminPassword } from "@/lib/admin-auth-shared";
+import { getAdminSessionCookieConfig, isValidAdminPassword, resolveRequestHost } from "@/lib/admin-auth-shared";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
         const password = typeof body.password === "string" ? body.password : "";
-        const host = req.nextUrl.hostname;
+        const host = resolveRequestHost(
+            req.headers.get("x-forwarded-host"),
+            req.headers.get("host") || req.nextUrl.hostname
+        );
 
         if (!isValidAdminPassword(password, host)) {
             return NextResponse.json(

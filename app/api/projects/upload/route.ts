@@ -1,4 +1,5 @@
 import { hasAdminSession } from "@/lib/admin-auth";
+import { getProjectUploadsDir } from "@/lib/project-uploads";
 import { NextRequest, NextResponse } from "next/server";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -61,7 +62,7 @@ export async function POST(req: NextRequest) {
 
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
-        const uploadsDir = path.join(process.cwd(), "public", "uploads", "projects");
+        const uploadsDir = getProjectUploadsDir();
         const originalName = sanitizeFileName(file.name || "project-image");
         const extension = path.extname(originalName) || ".png";
         const baseName = path.basename(originalName, extension) || "project-image";

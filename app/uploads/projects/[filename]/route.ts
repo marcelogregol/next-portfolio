@@ -1,3 +1,4 @@
+import { getProjectUploadPath, getProjectUploadsFallbackImagePath } from "@/lib/project-uploads";
 import { NextRequest, NextResponse } from "next/server";
 import { access, readFile } from "node:fs/promises";
 import path from "node:path";
@@ -12,12 +13,13 @@ const contentTypes: Record<string, string> = {
     ".gif": "image/gif",
 };
 
-function getUploadPath(fileName: string) {
-    return path.join(process.cwd(), "public", "uploads", "projects", fileName);
-}
-
 function isSafeFileName(fileName: string) {
     return /^[a-zA-Z0-9._-]+$/.test(fileName);
+}
+
+function getContentType(fileName: string) {
+    const extension = path.extname(fileName).toLowerCase();
+    return contentTypes[extension] ?? "application/octet-stream";
 }
 
 export async function GET(
@@ -31,21 +33,33 @@ export async function GET(
             return new NextResponse("Not Found", { status: 404 });
         }
 
-        const filePath = getUploadPath(filename);
+        const filePath = getProjectUploadPath(filename);
 
         await access(filePath);
 
         const fileBuffer = await readFile(filePath);
-        const extension = path.extname(filename).toLowerCase();
 
         return new NextResponse(fileBuffer, {
             status: 200,
             headers: {
-                "Content-Type": contentTypes[extension] ?? "application/octet-stream",
+                "Content-Type": getContentType(filename),
                 "Cache-Control": "public, max-age=31536000, immutable",
             },
         });
     } catch {
-        return new NextResponse("Not Found", { status: 404 });
+        try {
+            const fallbackPath = getProjectUploadsFallbackImagePath();
+            const fallbackBuffer = await readFile(fallbackPath);
+
+            return new NextResponse(fallbackBuffer, {
+                status: 200,
+                headers: {
+                    "Content-Type": "image/jpeg",
+                    "Cache-Control": "no-store",
+                },
+            });
+        } catch {
+            return new NextResponse("Not Found", { status: 404 });
+        }
     }
 }

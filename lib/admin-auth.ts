@@ -6,6 +6,7 @@ import {
     getAdminPassword,
     getSessionSalt,
     isValidAdminPassword,
+    resolveRequestHost,
 } from "@/lib/admin-auth-shared";
 
 export {
@@ -20,6 +21,9 @@ export {
 export async function hasAdminSession() {
     const cookieStore = await cookies();
     const headerStore = await headers();
-    const host = headerStore.get("host");
+    const host = resolveRequestHost(
+        headerStore.get("x-forwarded-host"),
+        headerStore.get("host")
+    );
     return cookieStore.get(ADMIN_SESSION_COOKIE)?.value === getAdminSessionToken(host);
 }
