@@ -48,12 +48,12 @@ export default function ProjectCard({ p }: { p: ProjectCardData }) {
                 <div className="mt-5 flex gap-3">
                     {p.demoUrl ? (
                         <Link className="btn-ghost" href={p.demoUrl} target="_blank" rel="noreferrer">
-                            Live Demo
+                            Demo
                         </Link>
                     ) : null}
                     {p.codeUrl ? (
                         <Link className="btn-ghost" href={p.codeUrl} target="_blank" rel="noreferrer">
-                            Source Code
+                            Code
                         </Link>
                     ) : null}
                 </div>
