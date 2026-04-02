@@ -119,6 +119,11 @@ export async function getEnabledProjects() {
     return projects.filter((project) => project.enabled);
 }
 
+export async function getProjectById(id: number) {
+    const projects = await getProjectsContent();
+    return projects.find((project) => project.id === id) ?? null;
+}
+
 export async function saveProjects(input: ProjectContent[]) {
     await prisma.project.deleteMany();
 

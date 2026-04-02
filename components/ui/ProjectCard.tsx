@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 type ProjectCardData = {
+    id: number | null;
     title: string;
     shortDesc: string;
     tags: string[];
@@ -54,6 +55,11 @@ export default function ProjectCard({ p }: { p: ProjectCardData }) {
                     {p.codeUrl ? (
                         <Link className="btn-ghost" href={p.codeUrl} target="_blank" rel="noreferrer">
                             Code
+                        </Link>
+                    ) : null}
+                    {p.id !== null ? (
+                        <Link className="btn-ghost" href={`/projects/${p.id}`}>
+                            Details
                         </Link>
                     ) : null}
                 </div>
