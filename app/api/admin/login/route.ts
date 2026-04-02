@@ -5,8 +5,9 @@ export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
         const password = typeof body.password === "string" ? body.password : "";
+        const host = req.nextUrl.hostname;
 
-        if (!isValidAdminPassword(password)) {
+        if (!isValidAdminPassword(password, host)) {
             return NextResponse.json(
                 { error: "Senha invalida" },
                 { status: 401 }
@@ -14,7 +15,7 @@ export async function POST(req: NextRequest) {
         }
 
         const response = NextResponse.json({ ok: true });
-        response.cookies.set(getAdminSessionCookieConfig());
+        response.cookies.set(getAdminSessionCookieConfig(host));
         return response;
     } catch (error) {
         console.error("POST /api/admin/login error:", error);

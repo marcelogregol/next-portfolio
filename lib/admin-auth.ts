@@ -1,4 +1,4 @@
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import {
     ADMIN_SESSION_COOKIE,
     getAdminSessionCookieConfig,
@@ -19,5 +19,7 @@ export {
 
 export async function hasAdminSession() {
     const cookieStore = await cookies();
-    return cookieStore.get(ADMIN_SESSION_COOKIE)?.value === getAdminSessionToken();
+    const headerStore = await headers();
+    const host = headerStore.get("host");
+    return cookieStore.get(ADMIN_SESSION_COOKIE)?.value === getAdminSessionToken(host);
 }

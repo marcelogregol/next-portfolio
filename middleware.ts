@@ -7,7 +7,7 @@ export function middleware(req: NextRequest) {
     }
 
     const session = req.cookies.get(ADMIN_SESSION_COOKIE)?.value;
-    if (session === getAdminSessionToken()) {
+    if (session === getAdminSessionToken(req.nextUrl.hostname)) {
         return NextResponse.next();
     }
 
