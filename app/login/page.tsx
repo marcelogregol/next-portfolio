@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
@@ -11,6 +11,11 @@ export default function LoginPage() {
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [showDemoPasswordHint, setShowDemoPasswordHint] = useState(false);
+
+    useEffect(() => {
+        setShowDemoPasswordHint(window.location.hostname === "demo.mgregol.tech");
+    }, []);
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -48,6 +53,11 @@ export default function LoginPage() {
                     <p className="mt-3 text-sm text-white/70">
                         Enter your password to manage portfolio content.
                     </p>
+                    {showDemoPasswordHint ? (
+                        <p className="mt-2 text-sm text-white/80">
+                            Password for testing: <strong>admin123</strong>
+                        </p>
+                    ) : null}
 
                     <form className="mt-8 grid gap-4" onSubmit={handleSubmit}>
                         <label className="grid gap-2">
