@@ -1,4 +1,5 @@
 import { prisma } from "./prisma";
+import { parseProjectCodeLinks, serializeProjectCodeLinks, type ProjectCodeLink } from "./project-code-links";
 
 export type ProjectContent = {
     id: number | null;
@@ -8,7 +9,7 @@ export type ProjectContent = {
     tags: string[];
     imageUrl: string;
     demoUrl: string;
-    codeUrl: string;
+    codeLinks: ProjectCodeLink[];
     featured: boolean;
     enabled: boolean;
     order: number;
@@ -37,7 +38,7 @@ export const defaultProjects: ProjectContent[] = [
         tags: ["Next.js", "API", "DB"],
         imageUrl: "/images/demo.jpg",
         demoUrl: "#",
-        codeUrl: "#",
+        codeLinks: [{ label: "Code", url: "#" }],
         featured: true,
         enabled: true,
         order: 1,
@@ -50,7 +51,7 @@ export const defaultProjects: ProjectContent[] = [
         tags: ["Next.js", "Node", "Stripe"],
         imageUrl: "/images/demo.jpg",
         demoUrl: "#",
-        codeUrl: "#",
+        codeLinks: [{ label: "Code", url: "#" }],
         featured: true,
         enabled: true,
         order: 2,
@@ -63,7 +64,7 @@ export const defaultProjects: ProjectContent[] = [
         tags: ["Next.js", "API", "UI"],
         imageUrl: "/images/demo.jpg",
         demoUrl: "#",
-        codeUrl: "#",
+        codeLinks: [{ label: "Code", url: "#" }],
         featured: false,
         enabled: true,
         order: 3,
@@ -90,7 +91,7 @@ function mapProject(row: ProjectRow): ProjectContent {
         tags: parseTags(row.tagsJson),
         imageUrl: row.imageUrl || "/images/demo.jpg",
         demoUrl: row.demoUrl || "",
-        codeUrl: row.codeUrl || "",
+        codeLinks: parseProjectCodeLinks(row.codeUrl),
         featured: Boolean(row.featured),
         enabled: Boolean(row.enabled),
         order: row.displayOrder,
@@ -153,7 +154,7 @@ export async function saveProjects(input: ProjectContent[]) {
                 tagsJson: JSON.stringify(project.tags ?? []),
                 imageUrl: project.imageUrl || "/images/demo.jpg",
                 demoUrl: project.demoUrl || null,
-                codeUrl: project.codeUrl || null,
+                codeUrl: serializeProjectCodeLinks(project.codeLinks ?? []),
                 featured: project.featured,
                 enabled: project.enabled,
                 displayOrder: project.order || index + 1,

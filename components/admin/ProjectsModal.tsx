@@ -5,6 +5,7 @@ import { FormField } from "@/components/admin/FormField";
 import { Modal } from "@/components/admin/Modal";
 import { TagInput } from "@/components/admin/TagInput";
 import { Toggle } from "@/components/admin/Toggle";
+import type { ProjectCodeLink } from "@/lib/project-code-links";
 
 export type ProjectForm = {
     id?: number | null;
@@ -14,7 +15,7 @@ export type ProjectForm = {
     tags: string[];
     imageUrl: string;
     demoUrl: string;
-    codeUrl: string;
+    codeLinks: ProjectCodeLink[];
     featured: boolean;
     enabled: boolean;
     order: number;
@@ -211,12 +212,68 @@ export function ProjectsModal({
                                     />
                                 </FormField>
 
-                                <FormField label="Source code URL">
-                                    <input
-                                        className="admin-input"
-                                        value={editing.codeUrl}
-                                        onChange={(e) => onChange({ ...editing, codeUrl: e.target.value })}
-                                    />
+                                <FormField label="Code buttons" hint="Add one or more custom code links for the project details page.">
+                                    <div className="grid gap-3">
+                                        {editing.codeLinks.map((link, index) => (
+                                            <div key={`${index}-${link.label}-${link.url}`} className="admin-subpanel admin-panel-frame rounded-md p-3">
+                                                <div className="grid gap-3">
+                                                    <input
+                                                        className="admin-input"
+                                                        value={link.label}
+                                                        placeholder="Button label"
+                                                        onChange={(e) =>
+                                                            onChange({
+                                                                ...editing,
+                                                                codeLinks: editing.codeLinks.map((item, itemIndex) =>
+                                                                    itemIndex === index ? { ...item, label: e.target.value } : item
+                                                                ),
+                                                            })
+                                                        }
+                                                    />
+                                                    <input
+                                                        className="admin-input"
+                                                        value={link.url}
+                                                        placeholder="https://github.com/..."
+                                                        onChange={(e) =>
+                                                            onChange({
+                                                                ...editing,
+                                                                codeLinks: editing.codeLinks.map((item, itemIndex) =>
+                                                                    itemIndex === index ? { ...item, url: e.target.value } : item
+                                                                ),
+                                                            })
+                                                        }
+                                                    />
+                                                    <div className="flex justify-end">
+                                                        <button
+                                                            type="button"
+                                                            className="admin-ghost-btn rounded-md px-3 py-2 text-xs text-red-300"
+                                                            onClick={() =>
+                                                                onChange({
+                                                                    ...editing,
+                                                                    codeLinks: editing.codeLinks.filter((_, itemIndex) => itemIndex !== index),
+                                                                })
+                                                            }
+                                                        >
+                                                            Remove code button
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+
+                                        <button
+                                            type="button"
+                                            className="admin-ghost-btn rounded-md px-3 py-2 text-sm"
+                                            onClick={() =>
+                                                onChange({
+                                                    ...editing,
+                                                    codeLinks: [...editing.codeLinks, { label: "Code", url: "" }],
+                                                })
+                                            }
+                                        >
+                                            + Add code button
+                                        </button>
+                                    </div>
                                 </FormField>
                             </div>
                         </FormField>

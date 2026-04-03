@@ -6,6 +6,7 @@ import type {
     ProjectContent,
     SkillContent,
 } from "./types";
+import { parseProjectCodeLinks } from "@/lib/project-code-links";
 
 export function mapHeroResponse(hero: unknown): HeroContent {
     const value = hero as Partial<HeroContent> | null | undefined;
@@ -81,7 +82,12 @@ export function mapProjectsResponse(projects: unknown): ProjectContent[] {
             tags: Array.isArray(value?.tags) ? value.tags : [],
             imageUrl: value?.imageUrl ?? "/images/demo.jpg",
             demoUrl: value?.demoUrl ?? "",
-            codeUrl: value?.codeUrl ?? "",
+            codeLinks: Array.isArray(value?.codeLinks)
+                ? value.codeLinks.filter(
+                      (link): link is { label: string; url: string } =>
+                          typeof link?.label === "string" && typeof link?.url === "string"
+                  )
+                : parseProjectCodeLinks((value as { codeUrl?: string } | null | undefined)?.codeUrl),
             featured: Boolean(value?.featured),
             enabled: Boolean(value?.enabled),
             order: Number(value?.order ?? index + 1),

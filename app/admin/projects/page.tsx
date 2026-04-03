@@ -29,7 +29,7 @@ export default function ProjectsPage() {
             tags: [],
             imageUrl: "/images/demo.jpg",
             demoUrl: "",
-            codeUrl: "",
+            codeLinks: [],
             featured: false,
             enabled: true,
             order: projects.length + 1,
@@ -106,7 +106,12 @@ export default function ProjectsPage() {
             longDesc: editing.longDesc.trim(),
             imageUrl: editing.imageUrl.trim() || "/images/demo.jpg",
             demoUrl: editing.demoUrl.trim(),
-            codeUrl: editing.codeUrl.trim(),
+            codeLinks: editing.codeLinks
+                .map((link) => ({
+                    label: link.label.trim(),
+                    url: link.url.trim(),
+                }))
+                .filter((link) => link.label && link.url),
             order: editing.order > 0 ? editing.order : projects.length + 1,
         };
 

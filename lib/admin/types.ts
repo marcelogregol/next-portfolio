@@ -1,4 +1,5 @@
 import type { SkillIconKey } from "@/lib/skill-icons";
+import type { ProjectCodeLink } from "@/lib/project-code-links";
 
 export type HeroContent = {
     id?: string;
@@ -36,7 +37,7 @@ export type ProjectContent = {
     tags: string[];
     imageUrl: string;
     demoUrl: string;
-    codeUrl: string;
+    codeLinks: ProjectCodeLink[];
     featured: boolean;
     enabled: boolean;
     order: number;

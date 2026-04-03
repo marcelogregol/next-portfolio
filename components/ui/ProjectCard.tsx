@@ -10,7 +10,6 @@ type ProjectCardData = {
     tags: string[];
     imageUrl: string;
     demoUrl?: string;
-    codeUrl?: string;
 };
 
 export default function ProjectCard({ p }: { p: ProjectCardData }) {
@@ -50,11 +49,6 @@ export default function ProjectCard({ p }: { p: ProjectCardData }) {
                     {p.demoUrl ? (
                         <Link className="btn-ghost" href={p.demoUrl} target="_blank" rel="noreferrer">
                             Demo
-                        </Link>
-                    ) : null}
-                    {p.codeUrl ? (
-                        <Link className="btn-ghost" href={p.codeUrl} target="_blank" rel="noreferrer">
-                            Code
                         </Link>
                     ) : null}
                     {p.id !== null ? (

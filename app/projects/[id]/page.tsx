@@ -108,11 +108,17 @@ export default async function ProjectDetailsPage({ params }: ProjectDetailsPageP
                                                 Demo
                                             </a>
                                         ) : null}
-                                        {project.codeUrl ? (
-                                            <a className="btn-ghost justify-center" href={project.codeUrl} target="_blank" rel="noreferrer">
-                                                Code
+                                        {project.codeLinks.map((link) => (
+                                            <a
+                                                key={`${link.label}-${link.url}`}
+                                                className="btn-ghost justify-center"
+                                                href={link.url}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                            >
+                                                {link.label}
                                             </a>
-                                        ) : null}
+                                        ))}
                                         <Link className="btn-ghost justify-center" href="/#projects">
                                             Back to Home
                                         </Link>
