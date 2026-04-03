@@ -1,5 +1,6 @@
 import { hasAdminSession } from "@/lib/admin-auth";
 import { getProjectsContent, saveProjects } from "@/lib/projects";
+import { parseProjectCodeLinks } from "@/lib/project-code-links";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
@@ -46,7 +47,20 @@ export async function PUT(req: NextRequest) {
                     : [],
                 imageUrl: project.imageUrl ?? "/images/demo.jpg",
                 demoUrl: project.demoUrl ?? "",
-                codeUrl: project.codeUrl ?? "",
+                codeLinks: Array.isArray(project.codeLinks)
+                    ? project.codeLinks
+                          .filter(
+                              (link: unknown): link is { label: string; url: string } =>
+                                  typeof link === "object" &&
+                                  link !== null &&
+                                  typeof (link as { label?: unknown }).label === "string" &&
+                                  typeof (link as { url?: unknown }).url === "string"
+                          )
+                          .map((link) => ({
+                              label: link.label,
+                              url: link.url,
+                          }))
+                    : parseProjectCodeLinks(typeof project.codeUrl === "string" ? project.codeUrl : ""),
                 featured: Boolean(project.featured),
                 enabled: Boolean(project.enabled),
                 order: Number(project.order ?? index + 1),
