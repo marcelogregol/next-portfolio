@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProjectById } from "@/lib/projects";
 import { ProjectRichText } from "@/components/ui/ProjectRichText";
+import { FaGithub } from "react-icons/fa";
+import { HiOutlineArrowUturnLeft, HiOutlinePlay } from "react-icons/hi2";
 
 const contactHref = "https://www.linkedin.com/in/marcelogregol/";
 
@@ -104,23 +106,26 @@ export default async function ProjectDetailsPage({ params }: ProjectDetailsPageP
                                     <p className="text-sm uppercase tracking-[0.3em] text-white/45">Quick access</p>
                                     <div className="mt-5 flex flex-col gap-3">
                                         {project.demoUrl ? (
-                                            <a className="btn-ghost justify-center" href={project.demoUrl} target="_blank" rel="noreferrer">
-                                                Demo
+                                            <a className="btn-ghost justify-center gap-2" href={project.demoUrl} target="_blank" rel="noreferrer">
+                                                <HiOutlinePlay className="h-4 w-4" />
+                                                <span>Demo</span>
                                             </a>
                                         ) : null}
                                         {project.codeLinks.map((link) => (
                                             <a
                                                 key={`${link.label}-${link.url}`}
-                                                className="btn-ghost justify-center"
+                                                className="btn-ghost justify-center gap-2"
                                                 href={link.url}
                                                 target="_blank"
                                                 rel="noreferrer"
                                             >
-                                                {link.label}
+                                                <FaGithub className="h-4 w-4" />
+                                                <span>{link.label}</span>
                                             </a>
                                         ))}
-                                        <Link className="btn-ghost justify-center" href="/#projects">
-                                            Back to Home
+                                        <Link className="btn-ghost justify-center gap-2" href="/#projects">
+                                            <HiOutlineArrowUturnLeft className="h-4 w-4" />
+                                            <span>Back to Home</span>
                                         </Link>
                                     </div>
                                 </div>
