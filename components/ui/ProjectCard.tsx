@@ -12,7 +12,13 @@ type ProjectCardData = {
     demoUrl?: string;
 };
 
-export default function ProjectCard({ p }: { p: ProjectCardData }) {
+export default function ProjectCard({
+    p,
+    compact = false,
+}: {
+    p: ProjectCardData;
+    compact?: boolean;
+}) {
     const [imageSrc, setImageSrc] = useState(p.imageUrl || "/images/demo.jpg");
 
     return (
@@ -31,12 +37,14 @@ export default function ProjectCard({ p }: { p: ProjectCardData }) {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-slate-950/10 to-transparent" />
             </div>
-            <div className="p-6">
-                <h3 className="text-lg font-bold">{p.title}</h3>
-                <p className="text-sub mt-2 leading-relaxed">{p.shortDesc}</p>
+            <div className={compact ? "p-4" : "p-6"}>
+                <h3 className={compact ? "text-base font-bold" : "text-lg font-bold"}>{p.title}</h3>
+                <p className={compact ? "text-sub mt-2 text-sm leading-relaxed" : "text-sub mt-2 leading-relaxed"}>
+                    {p.shortDesc}
+                </p>
 
                 {p.tags.length > 0 ? (
-                    <div className="mt-4 flex flex-wrap gap-2">
+                    <div className={compact ? "mt-3 flex flex-wrap gap-2" : "mt-4 flex flex-wrap gap-2"}>
                         {p.tags.map((tag) => (
                             <span key={tag} className="badge">
                                 {tag}
@@ -45,7 +53,7 @@ export default function ProjectCard({ p }: { p: ProjectCardData }) {
                     </div>
                 ) : null}
 
-                <div className="mt-5 flex gap-3">
+                <div className={compact ? "mt-4 flex gap-2" : "mt-5 flex gap-3"}>
                     {p.demoUrl ? (
                         <Link className="btn-ghost" href={p.demoUrl} target="_blank" rel="noreferrer">
                             Demo

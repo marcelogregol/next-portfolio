@@ -1,8 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProjectById } from "@/lib/projects";
+import { getEnabledProjects, getProjectById } from "@/lib/projects";
 import { ProjectRichText } from "@/components/ui/ProjectRichText";
+import ProjectCard from "@/components/ui/ProjectCard";
+import CTA from "@/components/layout/CTA";
+import Footer from "@/components/layout/Footer";
 import { FaGithub } from "react-icons/fa";
 import { HiOutlineArrowUturnLeft, HiOutlinePlay } from "react-icons/hi2";
 
@@ -27,6 +30,8 @@ export default async function ProjectDetailsPage({ params }: ProjectDetailsPageP
     if (!project) {
         notFound();
     }
+
+    const otherProjects = (await getEnabledProjects()).filter((item) => item.id !== project.id);
 
     return (
         <main className="min-h-screen bg-[#050816]">
@@ -57,7 +62,7 @@ export default async function ProjectDetailsPage({ params }: ProjectDetailsPageP
 
             <section className="section-shell section-divider section-surface-projects relative overflow-hidden">
                 <div className="section-backdrop section-backdrop-projects" />
-                <div className="container-base relative z-10 py-12 md:py-16">
+                <div className="container-base relative z-10 py-8 md:py-10">
                     <div className="glass rounded-[2rem] p-6 md:p-8">
                         <div className="grid gap-6 md:grid-cols-[minmax(0,1.2fr)_320px] md:gap-8">
                             <div className="space-y-6">
@@ -132,9 +137,29 @@ export default async function ProjectDetailsPage({ params }: ProjectDetailsPageP
                             </aside>
                         </div>
                     </div>
+
+                    {otherProjects.length > 0 ? (
+                        <div className="mt-8 md:mt-10">
+                            <div className="mb-6">
+                                <p className="text-sm uppercase tracking-[0.3em] text-white/45">More projects</p>
+                            </div>
+
+                            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                                {otherProjects.map((item) => (
+                                    <ProjectCard
+                                        key={item.id ?? `${item.title}-${item.order}`}
+                                        p={item}
+                                        compact
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    ) : null}
                 </div>
                 <div className="section-glow" />
             </section>
+            <CTA />
+            <Footer />
         </main>
     );
 }
