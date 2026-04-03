@@ -1,15 +1,11 @@
-import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getEnabledProjects, getProjectById } from "@/lib/projects";
-import { ProjectRichText } from "@/components/ui/ProjectRichText";
-import ProjectCard from "@/components/ui/ProjectCard";
 import CTA from "@/components/layout/CTA";
 import Footer from "@/components/layout/Footer";
-import { FaGithub } from "react-icons/fa";
-import { HiOutlineArrowUturnLeft, HiOutlinePlay } from "react-icons/hi2";
-
-const contactHref = "https://www.linkedin.com/in/marcelogregol/";
+import { ProjectDetailsTopNav } from "@/components/projects/ProjectDetailsTopNav";
+import { ProjectQuickAccess } from "@/components/projects/ProjectQuickAccess";
+import { RelatedProjectsSection } from "@/components/projects/RelatedProjectsSection";
+import { ProjectRichText } from "@/components/ui/ProjectRichText";
 
 export const dynamic = "force-dynamic";
 
@@ -35,30 +31,7 @@ export default async function ProjectDetailsPage({ params }: ProjectDetailsPageP
 
     return (
         <main className="min-h-screen bg-[#050816]">
-            <header className="nav-shell sticky top-0 z-50 bg-slate-950/78 px-6 backdrop-blur-xl md:px-10">
-                <div className="container-base flex min-h-16 flex-wrap items-center justify-between gap-4 py-3">
-                    <Link href="/" className="flex items-center" aria-label="Back to home">
-                        <Image
-                            src="/images/MRG.png"
-                            alt="MRG logo"
-                            width={100}
-                            height={30}
-                            priority
-                            unoptimized
-                            className="h-auto w-[77px] object-contain sm:w-[86px] md:w-[93px]"
-                        />
-                    </Link>
-
-                    <div className="flex flex-wrap items-center gap-3">
-                        <a href={contactHref} target="_blank" rel="noreferrer" className="btn-ghost">
-                            Get in touch
-                        </a>
-                        <Link href="/#projects" className="btn-ghost">
-                            Back to Home
-                        </Link>
-                    </div>
-                </div>
-            </header>
+            <ProjectDetailsTopNav />
 
             <section className="section-shell section-divider section-surface-projects relative overflow-hidden">
                 <div className="section-backdrop section-backdrop-projects" />
@@ -107,54 +80,15 @@ export default async function ProjectDetailsPage({ params }: ProjectDetailsPageP
                                     </div>
                                 </div>
 
-                                <div className="glass h-fit rounded-3xl border border-white/8 p-6">
-                                    <p className="text-sm uppercase tracking-[0.3em] text-white/45">Quick access</p>
-                                    <div className="mt-5 flex flex-col gap-3">
-                                        {project.demoUrl ? (
-                                            <a className="btn-ghost justify-center gap-2" href={project.demoUrl} target="_blank" rel="noreferrer">
-                                                <HiOutlinePlay className="h-4 w-4" />
-                                                <span>Demo</span>
-                                            </a>
-                                        ) : null}
-                                        {project.codeLinks.map((link) => (
-                                            <a
-                                                key={`${link.label}-${link.url}`}
-                                                className="btn-ghost justify-center gap-2"
-                                                href={link.url}
-                                                target="_blank"
-                                                rel="noreferrer"
-                                            >
-                                                <FaGithub className="h-4 w-4" />
-                                                <span>{link.label}</span>
-                                            </a>
-                                        ))}
-                                        <Link className="btn-ghost justify-center gap-2" href="/#projects">
-                                            <HiOutlineArrowUturnLeft className="h-4 w-4" />
-                                            <span>Back to Home</span>
-                                        </Link>
-                                    </div>
-                                </div>
+                                <ProjectQuickAccess
+                                    demoUrl={project.demoUrl}
+                                    codeLinks={project.codeLinks}
+                                />
                             </aside>
                         </div>
                     </div>
 
-                    {otherProjects.length > 0 ? (
-                        <div className="mt-8 md:mt-10">
-                            <div className="mb-6">
-                                <p className="text-sm uppercase tracking-[0.3em] text-white/45">More projects</p>
-                            </div>
-
-                            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                                {otherProjects.map((item) => (
-                                    <ProjectCard
-                                        key={item.id ?? `${item.title}-${item.order}`}
-                                        p={item}
-                                        compact
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                    ) : null}
+                    <RelatedProjectsSection projects={otherProjects} />
                 </div>
                 <div className="section-glow" />
             </section>

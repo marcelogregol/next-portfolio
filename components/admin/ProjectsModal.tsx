@@ -1,8 +1,10 @@
 "use client";
 
-import { RefObject, useRef } from "react";
+import { RefObject } from "react";
 import { FormField } from "@/components/admin/FormField";
 import { Modal } from "@/components/admin/Modal";
+import { ProjectCodeLinksEditor } from "@/components/admin/ProjectCodeLinksEditor";
+import { ProjectLongDescriptionField } from "@/components/admin/ProjectLongDescriptionField";
 import { TagInput } from "@/components/admin/TagInput";
 import { Toggle } from "@/components/admin/Toggle";
 import type { ProjectCodeLink } from "@/lib/project-code-links";
@@ -44,49 +46,6 @@ export function ProjectsModal({
     onChange,
     onUploadImage,
 }: ProjectsModalProps) {
-    const longDescRef = useRef<HTMLTextAreaElement | null>(null);
-
-    function updateLongDescription(nextValue: string, selectionStart?: number, selectionEnd?: number) {
-        if (!editing) return;
-
-        onChange({ ...editing, longDesc: nextValue });
-
-        window.requestAnimationFrame(() => {
-            if (!longDescRef.current) return;
-
-            longDescRef.current.focus();
-
-            if (typeof selectionStart === "number" && typeof selectionEnd === "number") {
-                longDescRef.current.setSelectionRange(selectionStart, selectionEnd);
-            }
-        });
-    }
-
-    function wrapSelection(prefix: string, suffix = prefix, placeholder = "") {
-        if (!editing || !longDescRef.current) return;
-
-        const textarea = longDescRef.current;
-        const { selectionStart, selectionEnd, value } = textarea;
-        const selectedText = value.slice(selectionStart, selectionEnd);
-        const insertedText = `${prefix}${selectedText || placeholder}${suffix}`;
-        const nextValue = `${value.slice(0, selectionStart)}${insertedText}${value.slice(selectionEnd)}`;
-        const cursorStart = selectionStart + prefix.length;
-        const cursorEnd = cursorStart + (selectedText || placeholder).length;
-
-        updateLongDescription(nextValue, cursorStart, cursorEnd);
-    }
-
-    function insertAtCursor(text: string) {
-        if (!editing || !longDescRef.current) return;
-
-        const textarea = longDescRef.current;
-        const { selectionStart, selectionEnd, value } = textarea;
-        const nextValue = `${value.slice(0, selectionStart)}${text}${value.slice(selectionEnd)}`;
-        const nextCursor = selectionStart + text.length;
-
-        updateLongDescription(nextValue, nextCursor, nextCursor);
-    }
-
     return (
         <Modal
             title={editing?.title ? `Edit: ${editing.title}` : "New project"}
@@ -113,43 +72,10 @@ export function ProjectsModal({
                                 />
                             </FormField>
 
-                            <FormField label="Long description">
-                                <div className="grid gap-2">
-                                    <div className="flex flex-wrap gap-2">
-                                        <button
-                                            type="button"
-                                            className="admin-ghost-btn rounded-md px-3 py-1.5 text-xs"
-                                            onClick={() => wrapSelection("**", "**", "bold text")}
-                                        >
-                                            Bold
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className="admin-ghost-btn rounded-md px-3 py-1.5 text-xs"
-                                            onClick={() => insertAtCursor("\n\n")}
-                                        >
-                                            Line break
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className="admin-ghost-btn rounded-md px-3 py-1.5 text-xs"
-                                            onClick={() => insertAtCursor("\n- ")}
-                                        >
-                                            Bullet
-                                        </button>
-                                    </div>
-
-                                    <textarea
-                                        ref={longDescRef}
-                                        className="admin-input h-32 lg:h-32 2xl:h-32"
-                                        value={editing.longDesc}
-                                        onChange={(e) => onChange({ ...editing, longDesc: e.target.value })}
-                                    />
-                                    <p className="admin-muted text-xs">
-                                        Supports basic formatting: bold, paragraph breaks and bullet lists.
-                                    </p>
-                                </div>
-                            </FormField>
+                            <ProjectLongDescriptionField
+                                value={editing.longDesc}
+                                onChange={(longDesc) => onChange({ ...editing, longDesc })}
+                            />
 
                             <FormField label="Tags (stack)">
                                 <TagInput
@@ -212,69 +138,10 @@ export function ProjectsModal({
                                     />
                                 </FormField>
 
-                                <FormField label="Code buttons" hint="Add one or more custom code links for the project details page.">
-                                    <div className="grid gap-3">
-                                        {editing.codeLinks.map((link, index) => (
-                                            <div key={index} className="admin-subpanel admin-panel-frame rounded-md p-3">
-                                                <div className="grid gap-3">
-                                                    <input
-                                                        className="admin-input"
-                                                        value={link.label}
-                                                        placeholder="Button label"
-                                                        onChange={(e) =>
-                                                            onChange({
-                                                                ...editing,
-                                                                codeLinks: editing.codeLinks.map((item, itemIndex) =>
-                                                                    itemIndex === index ? { ...item, label: e.target.value } : item
-                                                                ),
-                                                            })
-                                                        }
-                                                    />
-                                                    <input
-                                                        className="admin-input"
-                                                        value={link.url}
-                                                        placeholder="https://github.com/..."
-                                                        onChange={(e) =>
-                                                            onChange({
-                                                                ...editing,
-                                                                codeLinks: editing.codeLinks.map((item, itemIndex) =>
-                                                                    itemIndex === index ? { ...item, url: e.target.value } : item
-                                                                ),
-                                                            })
-                                                        }
-                                                    />
-                                                    <div className="flex justify-end">
-                                                        <button
-                                                            type="button"
-                                                            className="admin-ghost-btn rounded-md px-3 py-2 text-xs text-red-300"
-                                                            onClick={() =>
-                                                                onChange({
-                                                                    ...editing,
-                                                                    codeLinks: editing.codeLinks.filter((_, itemIndex) => itemIndex !== index),
-                                                                })
-                                                            }
-                                                        >
-                                                            Remove code button
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
-
-                                        <button
-                                            type="button"
-                                            className="admin-ghost-btn rounded-md px-3 py-2 text-sm"
-                                            onClick={() =>
-                                                onChange({
-                                                    ...editing,
-                                                    codeLinks: [...editing.codeLinks, { label: "Code", url: "" }],
-                                                })
-                                            }
-                                        >
-                                            + Add code button
-                                        </button>
-                                    </div>
-                                </FormField>
+                                <ProjectCodeLinksEditor
+                                    value={editing.codeLinks}
+                                    onChange={(codeLinks) => onChange({ ...editing, codeLinks })}
+                                />
                             </div>
                         </FormField>
                     </div>
