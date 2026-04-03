@@ -1,6 +1,6 @@
 "use client";
 
-import { RefObject } from "react";
+import { RefObject, useRef } from "react";
 import { FormField } from "@/components/admin/FormField";
 import { Modal } from "@/components/admin/Modal";
 import { TagInput } from "@/components/admin/TagInput";
@@ -43,6 +43,49 @@ export function ProjectsModal({
     onChange,
     onUploadImage,
 }: ProjectsModalProps) {
+    const longDescRef = useRef<HTMLTextAreaElement | null>(null);
+
+    function updateLongDescription(nextValue: string, selectionStart?: number, selectionEnd?: number) {
+        if (!editing) return;
+
+        onChange({ ...editing, longDesc: nextValue });
+
+        window.requestAnimationFrame(() => {
+            if (!longDescRef.current) return;
+
+            longDescRef.current.focus();
+
+            if (typeof selectionStart === "number" && typeof selectionEnd === "number") {
+                longDescRef.current.setSelectionRange(selectionStart, selectionEnd);
+            }
+        });
+    }
+
+    function wrapSelection(prefix: string, suffix = prefix, placeholder = "") {
+        if (!editing || !longDescRef.current) return;
+
+        const textarea = longDescRef.current;
+        const { selectionStart, selectionEnd, value } = textarea;
+        const selectedText = value.slice(selectionStart, selectionEnd);
+        const insertedText = `${prefix}${selectedText || placeholder}${suffix}`;
+        const nextValue = `${value.slice(0, selectionStart)}${insertedText}${value.slice(selectionEnd)}`;
+        const cursorStart = selectionStart + prefix.length;
+        const cursorEnd = cursorStart + (selectedText || placeholder).length;
+
+        updateLongDescription(nextValue, cursorStart, cursorEnd);
+    }
+
+    function insertAtCursor(text: string) {
+        if (!editing || !longDescRef.current) return;
+
+        const textarea = longDescRef.current;
+        const { selectionStart, selectionEnd, value } = textarea;
+        const nextValue = `${value.slice(0, selectionStart)}${text}${value.slice(selectionEnd)}`;
+        const nextCursor = selectionStart + text.length;
+
+        updateLongDescription(nextValue, nextCursor, nextCursor);
+    }
+
     return (
         <Modal
             title={editing?.title ? `Edit: ${editing.title}` : "New project"}
@@ -70,11 +113,41 @@ export function ProjectsModal({
                             </FormField>
 
                             <FormField label="Long description">
-                                <textarea
-                                    className="admin-input h-28 lg:h-[5.5rem] 2xl:h-28"
-                                    value={editing.longDesc}
-                                    onChange={(e) => onChange({ ...editing, longDesc: e.target.value })}
-                                />
+                                <div className="grid gap-2">
+                                    <div className="flex flex-wrap gap-2">
+                                        <button
+                                            type="button"
+                                            className="admin-ghost-btn rounded-md px-3 py-1.5 text-xs"
+                                            onClick={() => wrapSelection("**", "**", "bold text")}
+                                        >
+                                            Bold
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className="admin-ghost-btn rounded-md px-3 py-1.5 text-xs"
+                                            onClick={() => insertAtCursor("\n\n")}
+                                        >
+                                            Line break
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className="admin-ghost-btn rounded-md px-3 py-1.5 text-xs"
+                                            onClick={() => insertAtCursor("\n- ")}
+                                        >
+                                            Bullet
+                                        </button>
+                                    </div>
+
+                                    <textarea
+                                        ref={longDescRef}
+                                        className="admin-input h-32 lg:h-32 2xl:h-32"
+                                        value={editing.longDesc}
+                                        onChange={(e) => onChange({ ...editing, longDesc: e.target.value })}
+                                    />
+                                    <p className="admin-muted text-xs">
+                                        Supports basic formatting: bold, paragraph breaks and bullet lists.
+                                    </p>
+                                </div>
                             </FormField>
 
                             <FormField label="Tags (stack)">

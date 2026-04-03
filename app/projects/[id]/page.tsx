@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProjectById } from "@/lib/projects";
+import { ProjectRichText } from "@/components/ui/ProjectRichText";
 
 const contactHref = "https://www.linkedin.com/in/marcelogregol/";
 
@@ -74,9 +75,16 @@ export default async function ProjectDetailsPage({ params }: ProjectDetailsPageP
                                     </div>
                                 ) : null}
 
-                                <p className="max-w-4xl text-sub leading-8">
-                                    {project.longDesc || "More details about this project will be available soon."}
-                                </p>
+                                {project.longDesc ? (
+                                    <ProjectRichText
+                                        value={project.longDesc}
+                                        className="max-w-4xl space-y-4 text-sub"
+                                    />
+                                ) : (
+                                    <p className="max-w-4xl text-sub leading-8">
+                                        More details about this project will be available soon.
+                                    </p>
+                                )}
                             </div>
 
                             <aside className="space-y-5">
