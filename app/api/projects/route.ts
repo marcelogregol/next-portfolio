@@ -56,7 +56,7 @@ export async function PUT(req: NextRequest) {
                                   typeof (link as { label?: unknown }).label === "string" &&
                                   typeof (link as { url?: unknown }).url === "string"
                           )
-                          .map((link) => ({
+                          .map((link: { label: string; url: string }) => ({
                               label: link.label,
                               url: link.url,
                           }))
