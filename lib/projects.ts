@@ -125,11 +125,28 @@ export async function getProjectById(id: number) {
 }
 
 export async function saveProjects(input: ProjectContent[]) {
-    await prisma.project.deleteMany();
+    const existingProjects = await prisma.project.findMany({
+        select: { id: true },
+    });
+    const existingIds = new Set(existingProjects.map((project) => project.id));
+    const persistedIds = input
+        .map((project) => (typeof project.id === "number" && project.id > 0 ? project.id : null))
+        .filter((id): id is number => id !== null);
+    const idsToDelete = existingProjects
+        .map((project) => project.id)
+        .filter((id) => !persistedIds.includes(id));
 
-    for (const [index, project] of input.entries()) {
-        await prisma.project.create({
-            data: {
+    await prisma.$transaction(async (tx) => {
+        if (idsToDelete.length > 0) {
+            await tx.project.deleteMany({
+                where: {
+                    id: { in: idsToDelete },
+                },
+            });
+        }
+
+        for (const [index, project] of input.entries()) {
+            const data = {
                 title: project.title ?? "",
                 shortDesc: project.shortDesc ?? "",
                 longDesc: project.longDesc ?? "",
@@ -140,9 +157,19 @@ export async function saveProjects(input: ProjectContent[]) {
                 featured: project.featured,
                 enabled: project.enabled,
                 displayOrder: project.order || index + 1,
-            },
-        });
-    }
+            };
+
+            if (typeof project.id === "number" && project.id > 0 && existingIds.has(project.id)) {
+                await tx.project.update({
+                    where: { id: project.id },
+                    data,
+                });
+                continue;
+            }
+
+            await tx.project.create({ data });
+        }
+    });
 
     return getProjectsContent();
 }
