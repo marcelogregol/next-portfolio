@@ -215,7 +215,7 @@ export function ProjectsModal({
                                 <FormField label="Code buttons" hint="Add one or more custom code links for the project details page.">
                                     <div className="grid gap-3">
                                         {editing.codeLinks.map((link, index) => (
-                                            <div key={`${index}-${link.label}-${link.url}`} className="admin-subpanel admin-panel-frame rounded-md p-3">
+                                            <div key={index} className="admin-subpanel admin-panel-frame rounded-md p-3">
                                                 <div className="grid gap-3">
                                                     <input
                                                         className="admin-input"
