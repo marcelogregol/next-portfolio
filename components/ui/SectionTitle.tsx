@@ -1,18 +1,20 @@
 "use client";
 
+import { ReactNode } from "react";
+
 export default function SectionTitle({
     title,
     subtitle,
     id,
 }: {
     title: string;
-    subtitle?: string;
+    subtitle?: ReactNode;
     id: string;
 }) {
     return (
         <>
             <h2 id={id} className="scroll-mt-32 text-3xl font-extrabold tracking-tight">{title}</h2>
-            {subtitle ? <p className="text-sub mt-3 max-w-3xl">{subtitle}</p> : null}
+            {subtitle ? <div>{subtitle}</div> : null}
         </>
     );
 }

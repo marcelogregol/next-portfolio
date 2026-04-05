@@ -3,6 +3,7 @@
 import { AdminPageSection } from "@/components/admin/AdminPageSection";
 import { FormField } from "@/components/admin/FormField";
 import { useContent } from "@/components/admin/AdminShell";
+import { RichTextField } from "@/components/admin/RichTextField";
 
 export default function AboutPage() {
     const { content, patch } = useContent();
@@ -24,15 +25,12 @@ export default function AboutPage() {
                     />
                 </FormField>
 
-                <FormField label="Text">
-                    <textarea
-                        className="admin-input h-40 lg:h-28 2xl:h-40"
-                        value={about.text ?? ""}
-                        onChange={(e) =>
-                            patch((c) => ({ ...c, about: { ...c.about, text: e.target.value } }))
-                        }
-                    />
-                </FormField>
+                <RichTextField
+                    label="Text"
+                    value={about.text ?? ""}
+                    textareaClassName="admin-input h-40 lg:h-28 2xl:h-40"
+                    onChange={(text) => patch((c) => ({ ...c, about: { ...c.about, text } }))}
+                />
             </div>
         </AdminPageSection>
     );
